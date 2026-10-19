@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import { fr } from '../content/fr';
-import { site, orTodo } from '../config/site';
+import { site } from '../config/site';
 const t = fr.footer;
 const socials = Object.entries(site.social).filter(([, url]) => url) as [string, string][];
 const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 'LinkedIn', facebook: 'Facebook', tiktok: 'TikTok' };
@@ -15,9 +15,11 @@ const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 
 
     <div>
       <h2 class="foot-h">Contact</h2>
-      <p>{orTodo(site.legalName, 'nom juridique de l’association')}</p>
-      <p>{orTodo(site.address, 'adresse du siège')}</p>
-      <p>{site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : orTodo(null, 'e-mail de contact')}</p>
+      <p>{site.legalName}</p>
+      <p>{site.address}</p>
+      {site.privacyContact && <p>Personne de contact : {site.privacyContact}</p>}
+      {site.contactEmail && <p><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>}
+      <p class="foot-swiss">Données stockées en Suisse</p>
       {site.donation && <p class="foot-don">Dons : {site.donation}</p>}
     </div>
 
@@ -32,13 +34,13 @@ const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 
     </div>
 
     <div>
-      <h2 class="foot-h">Suivre le mouvement</h2>
-      {socials.length ? (
-        <ul class="foot-links">{socials.map(([k, url]) => <li><a href={url} rel="noopener" target="_blank">{socialNames[k]}</a></li>)}</ul>
-      ) : (
-        <p>{orTodo(null, 'liens réseaux sociaux')}</p>
+      {socials.length > 0 && (
+        <>
+          <h2 class="foot-h">Suivre le mouvement</h2>
+          <ul class="foot-links foot-social">{socials.map(([k, url]) => <li><a href={url} rel="noopener" target="_blank">{socialNames[k]}</a></li>)}</ul>
+        </>
       )}
-      <h2 class="foot-h foot-h--lang">{t.languages}</h2>
+      <h2 class="foot-h">{t.languages}</h2>
       <ul class="foot-lang">
         {site.languages.map((l) =>
           l.ready ? (
@@ -62,7 +64,8 @@ const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 
   @media (min-width: 760px) { .foot-grid { grid-template-columns: 1.3fr 1fr 1fr 1fr; } }
   .foot-tagline { margin-top: 1.25rem; font-family: var(--font-serif); font-style: italic; font-size: var(--step-1); color: var(--ivory); max-width: 18ch; line-height: 1.2; }
   .foot-h { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.9rem; font-weight: 700; }
-  .foot-h--lang { margin-top: 1.75rem; }
+  .foot-social { margin-bottom: 1.75rem; }
+  .foot-swiss { margin-top: 0.9rem; font-weight: 600; color: var(--lime); }
   .foot-links, .foot-lang { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.45rem; }
   .foot-lang { display: flex; gap: 0.5rem; }
   .foot-lang a, .foot-lang span[title] { display: inline-grid; place-items: center; min-width: 2.75rem; min-height: 2.75rem; border-radius: 8px; border: 1.5px solid rgba(245, 239, 227, 0.35); font-weight: 700; text-decoration: none; }

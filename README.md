@@ -120,9 +120,10 @@ Le fichier `render.yaml` permet aussi de déployer sur [Render](https://render.c
 | Variable | Obligatoire | Rôle |
 |----------|-------------|------|
 | `SITE_URL` | Oui sur Render, facultatif sur Vercel | Adresse publique (SEO, liens de partage, QR codes). Sur Vercel, l’adresse de production du projet est utilisée par défaut |
-| `FORM_WEBHOOK_URL` | Un des deux canaux | Reçoit chaque formulaire en JSON (Google Sheets, Make, n8n, Zapier, CRM…) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` + `NOTIFY_EMAIL_TO` | **Recommandé** | E-mail via la messagerie Infomaniak (données en Suisse) |
+| `FORM_WEBHOOK_URL` | Option (hors Suisse) | Reçoit chaque formulaire en JSON (Google Sheets, Make, n8n, Zapier, CRM…) |
 | `FORM_WEBHOOK_SECRET` | Recommandé avec le webhook | Secret partagé, transmis dans l’en-tête `X-Xperienced-Secret` et dans le champ `secret` |
-| `RESEND_API_KEY` + `NOTIFY_EMAIL_TO` | Un des deux canaux | E-mail à l’équipe pour chaque envoi (Resend, offre gratuite) |
+| `RESEND_API_KEY` + `NOTIFY_EMAIL_TO` | Option (hors Suisse) | E-mail à l’équipe pour chaque envoi (Resend, offre gratuite) |
 | `NOTIFY_EMAIL_FROM` | Avec Resend | Expéditeur sur un domaine vérifié dans Resend |
 | `PUBLIC_PLAUSIBLE_DOMAIN` | Non | Active Plausible (mesure sans cookie, payant) |
 | `PUBLIC_UMAMI_WEBSITE_ID` | Non | Active Umami (mesure sans cookie, offre gratuite disponible) |
@@ -135,9 +136,24 @@ Les variables `PUBLIC_…` et `SITE_URL` sont lues **au moment du build** : red�
 
 **Tant qu’aucun canal n’est configuré en production, le site affiche « Le formulaire n’est pas encore activé : votre demande n’a pas été envoyée ».** Il ne fait jamais croire qu’une demande a été reçue.
 
-Options, de la plus simple à la plus complète :
+**Choix retenu : messagerie Infomaniak (données stockées en Suisse).** C’est ce qu’annoncent la politique de confidentialité, les mentions légales et le bas de page.
 
-1. **Google Sheets (gratuit, recommandé pour démarrer)** : suivez les instructions en tête de [`docs/google-sheets-webhook.gs`](docs/google-sheets-webhook.gs). Chaque formulaire arrive dans un onglet, avec une colonne `statut` pour le suivi.
+1. Dans Infomaniak, créez (ou choisissez) une adresse e-mail, par ex. `formulaires@votre-domaine.ch`.
+2. Dans Vercel, *Settings › Environment Variables*, ajoutez :
+   - `SMTP_HOST` = `mail.infomaniak.com`
+   - `SMTP_PORT` = `465`
+   - `SMTP_USER` = l’adresse e-mail Infomaniak
+   - `SMTP_PASS` = son mot de passe (ou un mot de passe d’application si la double authentification est activée)
+   - `NOTIFY_EMAIL_TO` = la ou les boîtes qui reçoivent les formulaires
+3. Redéployez, vérifiez `/api/health` (`"smtp": true`) et envoyez un formulaire de test de chaque type.
+
+Chaque formulaire arrive alors par e-mail dans votre messagerie Infomaniak, avec l’adresse de la personne en « Répondre à ».
+
+> ⚠️ Les autres options ci-dessous stockent les données **hors de Suisse** (Google, Resend : États-Unis). Si vous les activez, la mention « données stockées en Suisse » devient fausse : mettez d’abord à jour `src/pages/confidentialite.astro`, `src/pages/mentions-legales.astro` et le bas de page.
+
+Autres options :
+
+1. **Google Sheets (gratuit)** : suivez les instructions en tête de [`docs/google-sheets-webhook.gs`](docs/google-sheets-webhook.gs). Chaque formulaire arrive dans un onglet, avec une colonne `statut` pour le suivi.
 2. **E-mail via Resend** : créez un compte, vérifiez votre domaine, créez une clé API, renseignez `RESEND_API_KEY`, `NOTIFY_EMAIL_TO` et `NOTIFY_EMAIL_FROM`.
 3. **Les deux** : recommandé (tableur pour le suivi + e-mail pour réagir vite). Une demande est acceptée si au moins un canal l’a bien reçue.
 4. **Outil d’automatisation ou CRM** (Make, n8n, Zapier, Brevo…) : utilisez son URL de webhook dans `FORM_WEBHOOK_URL`.
@@ -163,7 +179,7 @@ Pensez à indiquer les outils réellement utilisés dans la politique de confide
 
 - Chaque affiche pointe vers une adresse courte `https://VOTRE-SITE/q/<code>`, définie dans `src/config/campaigns.ts`.
 - À chaque scan, le serveur redirige vers la bonne page avec les paramètres UTM et :
-  - si un webhook est configuré (Google Sheets), ajoute une ligne dans l’onglet **`qr_scan`** (code, campagne, date) : c’est l’historique durable des scans ;
+  - si un webhook est configuré, l’envoie aussi (par ex. onglet **`qr_scan`** d’une feuille Google — aucune donnée personnelle, seulement le code, la campagne et la date) ;
   - écrit aussi `{"event":"qr_scan","code":"cv",…}` dans les journaux de l’hébergeur (Vercel : *Logs* ; Render : *Logs*). Ces journaux gratuits ne sont conservés que peu de temps.
 - Relevez les chiffres chaque semaine dans le tableau de bord (`docs/tableau-de-bord.csv`).
 - La campagne d’origine est jointe à chaque formulaire (`meta.utm_campaign`) : on sait quelle affiche a produit quelle inscription.

@@ -1,7 +1,9 @@
 /**
  * Transmission des formulaires.
  *
- * Deux canaux, activés par des variables d'environnement (jamais dans le code) :
+ * Canaux, activés par des variables d'environnement (jamais dans le code) :
+ *  0. SMTP_HOST + SMTP_USER + SMTP_PASS + NOTIFY_EMAIL_TO → e-mail via un serveur SMTP.
+ *     Recommandé : Infomaniak (mail.infomaniak.com), données stockées en Suisse.
  *  1. FORM_WEBHOOK_URL  → envoi JSON vers un webhook (Google Sheets via Apps Script,
  *     Make, n8n, Zapier, un CRM…). Optionnel : FORM_WEBHOOK_SECRET, transmis dans
  *     l'en-tête « X-Xperienced-Secret » pour que le destinataire vérifie l'origine.
@@ -14,6 +16,7 @@
  *    le site ne fait jamais croire qu'une demande a été reçue.
  */
 import { appendFile, mkdir } from 'node:fs/promises';
+import nodemailer from 'nodemailer';
 import { KIND_LABELS, type FormKind } from './forms';
 
 export type Submission = {
@@ -31,15 +34,16 @@ const env = (k: string) => process.env[k]?.trim() || '';
 
 export function channels() {
   return {
+    smtp: Boolean(env('SMTP_HOST') && env('SMTP_USER') && env('SMTP_PASS') && env('NOTIFY_EMAIL_TO')),
     webhook: Boolean(env('FORM_WEBHOOK_URL')),
     email: Boolean(env('RESEND_API_KEY') && env('NOTIFY_EMAIL_TO')),
-    devFile: process.env.NODE_ENV !== 'production' && !env('FORM_WEBHOOK_URL') && !env('RESEND_API_KEY'),
+    devFile: process.env.NODE_ENV !== 'production' && !env('FORM_WEBHOOK_URL') && !env('RESEND_API_KEY') && !env('SMTP_HOST'),
   };
 }
 
 export function isConfigured() {
   const c = channels();
-  return c.webhook || c.email || c.devFile;
+  return c.smtp || c.webhook || c.email || c.devFile;
 }
 
 async function toWebhook(s: Submission | ScanEvent, timeout = 10_000) {
@@ -66,7 +70,7 @@ function render(value: unknown): string {
   return String(value ?? '');
 }
 
-async function toEmail(s: Submission) {
+function emailContent(s: Submission) {
   const rows = [...Object.entries(s.data), ...Object.entries(s.meta)]
     .filter(([, v]) => render(v) !== '')
     .map(
@@ -75,6 +79,35 @@ async function toEmail(s: Submission) {
     )
     .join('');
   const replyTo = typeof s.data.email === 'string' && s.data.email ? s.data.email : undefined;
+  return {
+    replyTo,
+    subject: `[Xperienced] ${KIND_LABELS[s.kind]} · ${s.id}`,
+    html: `<h2 style="font-family:sans-serif">${escapeHtml(KIND_LABELS[s.kind])}</h2><p style="font-family:sans-serif">Reçu le ${escapeHtml(s.received_at)}</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
+  };
+}
+
+async function toSmtp(s: Submission) {
+  const port = Number(env('SMTP_PORT') || 465);
+  const transport = nodemailer.createTransport({
+    host: env('SMTP_HOST'),
+    port,
+    secure: port === 465,
+    auth: { user: env('SMTP_USER'), pass: env('SMTP_PASS') },
+    connectionTimeout: 10_000,
+    socketTimeout: 10_000,
+  });
+  const { replyTo, subject, html } = emailContent(s);
+  await transport.sendMail({
+    from: env('NOTIFY_EMAIL_FROM') || `Xperienced <${env('SMTP_USER')}>`,
+    to: env('NOTIFY_EMAIL_TO').split(',').map((x) => x.trim()),
+    replyTo,
+    subject,
+    html,
+  });
+}
+
+async function toEmail(s: Submission) {
+  const { replyTo, subject, html } = emailContent(s);
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${env('RESEND_API_KEY')}`, 'content-type': 'application/json' },
@@ -82,8 +115,8 @@ async function toEmail(s: Submission) {
       from: env('NOTIFY_EMAIL_FROM') || 'Xperienced <onboarding@resend.dev>',
       to: env('NOTIFY_EMAIL_TO').split(',').map((x) => x.trim()),
       reply_to: replyTo,
-      subject: `[Xperienced] ${KIND_LABELS[s.kind]} · ${s.id}`,
-      html: `<h2 style="font-family:sans-serif">${escapeHtml(KIND_LABELS[s.kind])}</h2><p style="font-family:sans-serif">Reçu le ${escapeHtml(s.received_at)}</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
+      subject,
+      html,
     }),
     signal: AbortSignal.timeout(10_000),
   });
@@ -99,6 +132,7 @@ async function toDevFile(s: Submission) {
 export async function deliver(s: Submission): Promise<number> {
   const c = channels();
   const jobs: Promise<void>[] = [];
+  if (c.smtp) jobs.push(toSmtp(s));
   if (c.webhook) jobs.push(toWebhook(s));
   if (c.email) jobs.push(toEmail(s));
   if (c.devFile) jobs.push(toDevFile(s));

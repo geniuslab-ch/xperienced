@@ -229,7 +229,7 @@ const content = {
       },
       {
         q: 'Comment mes informations personnelles sont-elles utilisées ?',
-        a: 'Uniquement pour vous recontacter et chercher des opportunités qui vous correspondent. Nous demandons le minimum, nous ne vendons rien et ne transmettons vos coordonnées à une organisation qu’avec votre accord. Tous les détails figurent dans notre politique de confidentialité.',
+        a: 'Uniquement pour vous recontacter et chercher des opportunités qui vous correspondent. Elles sont stockées en Suisse, chez Infomaniak. Nous demandons le minimum, nous ne vendons rien et ne transmettons vos coordonnées à une organisation qu’avec votre accord. Tous les détails figurent dans notre politique de confidentialité.',
       },
     ],
   },

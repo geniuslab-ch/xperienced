@@ -1,28 +1,35 @@
 ---
 /**
- * Politique de confidentialité — projet rédigé selon la loi fédérale sur la protection
+ * Politique de confidentialité — rédigée selon la loi fédérale sur la protection
  * des données (LPD, en vigueur depuis le 1er septembre 2023), notamment le devoir
- * d'informer (art. 19 LPD). À faire relire avant publication.
+ * d'informer (art. 19 LPD). À faire relire par une personne compétente.
+ *
+ * ⚠️ Elle indique que les données sont stockées en Suisse chez Infomaniak : la
+ * réception des formulaires doit donc passer par la messagerie Infomaniak
+ * (variables SMTP_*), et non par Google Sheets ou Resend (voir README).
  */
 import Prose from '../layouts/Prose.astro';
-import { site, orTodo } from '../config/site';
-const draft = !site.legalName || !site.contactEmail || !site.address;
+import { site } from '../config/site';
+const contact = site.contactEmail;
 ---
-<Prose title="Politique de confidentialité · Xperienced" description="Comment Xperienced traite vos données personnelles." heading="Politique de confidentialité" draft={draft}>
-  <p>Dernière mise à jour : [À compléter : date]</p>
+<Prose title="Politique de confidentialité · Xperienced" description="Comment Xperienced traite vos données personnelles. Données stockées en Suisse." heading="Politique de confidentialité">
+  <p>Dernière mise à jour : 19 octobre 2026</p>
 
   <h2>1. Qui est responsable de vos données ?</h2>
-  <p>{orTodo(site.legalName, 'nom juridique de l’association')}, {orTodo(site.address, 'adresse du siège')}.</p>
-  <p>Contact pour toute question relative à vos données : {orTodo(site.privacyContact, 'personne ou fonction responsable')}, {site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : orTodo(null, 'e-mail de contact')}.</p>
+  <p>{site.legalName}, initiative associative basée à {site.address}.</p>
+  <p>
+    Personne de contact pour toute question relative à vos données : {site.privacyContact}
+    {contact ? <>, <a href={`mailto:${contact}`}>{contact}</a>.</> : <>, joignable par le <a href="/#soutenir">formulaire de contact du site</a> en indiquant « Protection des données » dans votre message.</>}
+  </p>
 
   <h2>2. Quelles données collectons-nous ?</h2>
   <p>Uniquement ce que vous nous transmettez via nos formulaires, et seulement le nécessaire :</p>
   <ul>
-    <li><strong>Inscription individuelle :</strong> prénom, moyen de contact préféré, e-mail et/ou téléphone, canton, ce que vous recherchez, quelques mots sur votre expérience et vos envies, et, si vous le souhaitez, votre disponibilité.</li>
+    <li><strong>Inscription individuelle :</strong> prénom, moyen de contact préféré, e-mail et/ou téléphone, canton, ce que vous recherchez, quelques mots sur votre expérience et vos envies et, si vous le souhaitez, votre disponibilité.</li>
     <li><strong>Proposition d’opportunité :</strong> nom de l’organisation, personne de contact, coordonnées professionnelles, description de l’opportunité.</li>
     <li><strong>Soutien :</strong> nom, e-mail, la manière dont vous souhaitez aider, votre message.</li>
     <li><strong>Mur de l’expérience :</strong> votre phrase, la signature que vous choisissez et, si vous le souhaitez, votre e-mail.</li>
-    <li><strong>Informations techniques de provenance :</strong> la campagne ou l’affiche par laquelle vous êtes arrivé·e (paramètres de lien, sans identifiant personnel).</li>
+    <li><strong>Provenance de la visite :</strong> la campagne ou l’affiche par laquelle vous êtes arrivé·e (paramètres de lien, sans identifiant personnel).</li>
   </ul>
   <p>Merci de ne pas nous transmettre d’informations sensibles (santé, opinions religieuses ou politiques, etc.) : elles ne sont pas nécessaires.</p>
 
@@ -35,27 +42,22 @@ const draft = !site.legalName || !site.contactEmail || !site.address;
   </ul>
   <p>Nous ne vendons pas vos données et ne les utilisons pas à des fins publicitaires.</p>
 
-  <h2>4. Qui y a accès ?</h2>
-  <p>Les membres de l’équipe Xperienced qui traitent les demandes. Nous recourons à des prestataires techniques qui traitent les données pour notre compte :</p>
-  <ul>
-    <li>Hébergement du site : [À compléter : ex. Vercel Inc. (États-Unis), région d’exécution choisie]</li>
-    <li>Réception des formulaires : [À compléter : ex. Google Sheets / Resend / autre outil effectivement configuré]</li>
-    <li>Mesure d’audience sans cookie : [À compléter : outil utilisé, ou « aucune »]</li>
-  </ul>
-  <p>Vos coordonnées ne sont jamais transmises à un employeur ou à une association sans votre accord préalable.</p>
+  <h2>4. Où sont stockées vos données ?</h2>
+  <p><strong>En Suisse.</strong> Les informations envoyées via nos formulaires sont transmises par e-mail et conservées dans notre messagerie hébergée par <strong>Infomaniak Network SA</strong>, Rue Eugène-Marziano 25, 1227 Les Acacias (Genève), dans ses centres de données en Suisse.</p>
+  <p>Le site lui-même est hébergé par <strong>Vercel Inc.</strong> (États-Unis). Lors de l’envoi d’un formulaire, vos informations transitent par les serveurs de Vercel à Francfort (Allemagne) le temps de nous être transmises ; elles n’y sont pas enregistrées. Comme tout hébergeur, Vercel conserve brièvement des journaux techniques (par exemple l’adresse IP et la page demandée) pour assurer le fonctionnement et la sécurité du site. L’Allemagne figure parmi les pays reconnus par le Conseil fédéral comme offrant une protection adéquate des données ; pour l’accès éventuel de Vercel depuis les États-Unis, nous nous appuyons sur les garanties contractuelles prévues par son accord de traitement des données.</p>
 
-  <h2>5. Transferts à l’étranger</h2>
-  <p>[À compléter : indiquer les pays où les données peuvent être traitées par ces prestataires et les garanties prévues (par exemple pays reconnus par le Conseil fédéral comme offrant une protection adéquate, ou clauses contractuelles types). Privilégier si possible un hébergement en Suisse ou dans l’Union européenne.]</p>
+  <h2>5. Qui y a accès ?</h2>
+  <p>Uniquement les membres de l’équipe Xperienced qui traitent les demandes. Vos coordonnées ne sont jamais transmises à un employeur ou à une association <strong>sans votre accord préalable</strong>.</p>
 
   <h2>6. Combien de temps les conservons-nous ?</h2>
-  <p>[À compléter : par exemple, 24 mois après le dernier contact, puis suppression.] Vous pouvez demander la suppression de vos données à tout moment.</p>
+  <p>Vos données sont conservées tant que nous sommes en contact, puis supprimées au plus tard 24 mois après notre dernier échange. Vous pouvez demander leur suppression à tout moment.</p>
 
   <h2>7. Vos droits</h2>
-  <p>Vous pouvez à tout moment demander l’accès à vos données, leur rectification ou leur suppression, vous opposer à leur traitement ou retirer votre consentement (par exemple pour la publication d’une phrase). Il suffit de nous écrire à l’adresse ci-dessus. Vous pouvez aussi vous adresser au Préposé fédéral à la protection des données et à la transparence (PFPDT).</p>
+  <p>Vous pouvez à tout moment demander l’accès à vos données, leur rectification ou leur suppression, vous opposer à leur traitement ou retirer votre consentement (par exemple pour la publication d’une phrase). Il suffit de contacter {site.privacyContact} comme indiqué au point 1. Vous pouvez aussi vous adresser au Préposé fédéral à la protection des données et à la transparence (PFPDT).</p>
 
   <h2>8. Cookies et mesure d’audience</h2>
-  <p>Ce site n’utilise pas de cookie publicitaire ni de traçage. Le cas échéant, la mesure d’audience est réalisée avec un outil sans cookie, qui produit des statistiques agrégées. Le site mémorise temporairement dans votre navigateur (jusqu’à la fermeture de l’onglet) la campagne par laquelle vous êtes arrivé·e.</p>
+  <p>Ce site n’utilise ni cookie publicitaire ni traçage. Le site mémorise temporairement dans votre navigateur (jusqu’à la fermeture de l’onglet) la campagne par laquelle vous êtes arrivé·e. Si une mesure d’audience est activée, elle utilise un outil sans cookie qui produit uniquement des statistiques agrégées ; cette page sera alors mise à jour pour le nommer.</p>
 
   <h2>9. Sécurité</h2>
-  <p>Les échanges avec le site sont chiffrés (HTTPS). L’accès aux données reçues est limité aux personnes qui en ont besoin.</p>
+  <p>Les échanges avec le site sont chiffrés (HTTPS). L’accès à la messagerie qui reçoit vos données est protégé et limité aux personnes qui en ont besoin.</p>
 </Prose>

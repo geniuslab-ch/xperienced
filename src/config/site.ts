@@ -10,16 +10,16 @@ export const site = {
   name: 'Xperienced',
 
   /** Nom juridique exact (ex. « Association Xperienced »), tel qu'inscrit dans les statuts. */
-  legalName: null as string | null,
+  legalName: 'Xperienced' as string | null,
 
   /** Adresse postale du siège (rue, NPA, localité). */
-  address: null as string | null,
+  address: 'Genève (GE), Suisse' as string | null,
 
   /** Adresse e-mail de contact publique. */
   contactEmail: null as string | null,
 
   /** Personne responsable du traitement des données (nom ou fonction), pour la politique de confidentialité. */
-  privacyContact: null as string | null,
+  privacyContact: 'N. Schärer' as string | null,
 
   /**
    * Région(s) où Xperienced est réellement active. Ne mentionnez que des
@@ -30,7 +30,10 @@ export const site = {
   /** Informations de don (IBAN, TWINT…). Laisser `null` tant qu'aucun compte n'existe : la mention n'apparaît alors pas. */
   donation: null as string | null,
 
-  /** Réseaux sociaux : ne renseigner que les comptes existants. Les autres ne s'affichent pas. */
+  /**
+   * Réseaux sociaux : ne renseigner que les comptes existants. Tant qu'aucun n'est
+   * renseigné, la rubrique n'apparaît pas dans le bas de page.
+   */
   social: {
     instagram: null as string | null,
     linkedin: null as string | null,
