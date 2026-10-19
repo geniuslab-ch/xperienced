@@ -15,12 +15,26 @@ export const CANTONS = [
 ];
 export const OTHER_LOCATIONS = ['Hors de Suisse', 'Je préfère ne pas le préciser'];
 
-export const OBJECTIFS = {
-  emploi: 'Un emploi (fixe ou à temps partiel)',
-  mission: 'Des missions ponctuelles ou du conseil',
-  benevolat: 'Du bénévolat ou un projet local',
-  mentorat: 'Transmettre : mentorat, formation, partage de savoir-faire',
-  activites: 'Des activités, des rencontres, de nouvelles envies',
+/** Ce que recherchent les personnes 50+. Les mandats d'abord ; emploi et bénévolat restent des options distinctes. */
+export const MANDATS = {
+  conseil: 'Mandat de conseil ou d’expertise',
+  mission: 'Mission courte (renfort, remplacement, lancement)',
+  administratif: 'Soutien administratif',
+  mentorat: 'Mentorat, formation, transmission',
+  projet: 'Projet (piloter ou contribuer)',
+} as const;
+export const AUTRES = {
+  emploi: 'Un emploi salarié (fixe ou temps partiel)',
+  benevolat: 'Du bénévolat (non rémunéré)',
+} as const;
+export const OBJECTIFS = { ...MANDATS, ...AUTRES } as const;
+
+export const SITUATIONS = {
+  independant: 'Déjà indépendant·e (affilié·e à une caisse AVS)',
+  salarie: 'Salarié·e',
+  'sans-emploi': 'Sans emploi / au chômage',
+  retraite: 'À la retraite',
+  autre: 'Autre / je préfère ne pas le préciser',
 } as const;
 
 export const DISPONIBILITES = {
@@ -33,6 +47,7 @@ export const DISPONIBILITES = {
 
 export const TYPES_ORG = {
   entreprise: 'Entreprise',
+  particulier: 'Particulier',
   association: 'Association ou organisation à but non lucratif',
   commune: 'Commune ou collectivité publique',
   institution: 'Institution sociale, fondation ou école',
@@ -40,17 +55,20 @@ export const TYPES_ORG = {
 } as const;
 
 export const TYPES_OPPORTUNITE = {
-  emploi: 'Emploi salarié',
-  mission: 'Mission ou mandat ponctuel',
-  benevolat: 'Bénévolat',
-  mentorat: 'Mentorat ou transmission de savoir-faire',
-  activite: 'Activité ou projet communautaire',
+  conseil: 'Mandat : conseil ou expertise',
+  mission: 'Mandat : mission courte',
+  administratif: 'Mandat : soutien administratif',
+  mentorat: 'Mandat : mentorat ou formation',
+  projet: 'Mandat : projet',
+  emploi: 'Emploi salarié (option distincte)',
+  benevolat: 'Bénévolat (option distincte)',
   partenariat: 'Partenariat avec Xperienced',
 } as const;
 
 export const STATUTS = {
-  remunere: 'Rémunéré',
-  'non-remunere': 'Non rémunéré (bénévole)',
+  honoraires: 'Rémunéré : honoraires (mandat indépendant)',
+  salaire: 'Rémunéré : salaire (emploi)',
+  'non-remunere': 'Non rémunéré (bénévolat)',
   'a-definir': 'À définir ensemble',
 } as const;
 
@@ -132,6 +150,8 @@ export function validate(fd: FormData): Result {
     if (!oneOf(d.region, [...CANTONS, ...OTHER_LOCATIONS])) e.region = M.choice;
     d.objectifs = list(fd, 'objectifs', Object.keys(OBJECTIFS));
     if (!d.objectifs.length) e.objectifs = M.atLeastOne;
+    d.situation = str(fd, 'situation', 30);
+    if (d.situation && !oneOf(d.situation, Object.keys(SITUATIONS))) d.situation = '';
     d.competences = str(fd, 'competences', 800);
     if (!d.competences) e.competences = M.required;
     d.disponibilite = str(fd, 'disponibilite', 30);
@@ -161,7 +181,10 @@ export function validate(fd: FormData): Result {
     if (!d.lieu) e.lieu = M.required;
     d.distance = fd.get('distance') === 'oui';
     d.engagement = str(fd, 'engagement', 200);
+    d.remuneration = str(fd, 'remuneration', 200);
     d.infos = str(fd, 'infos', 1000);
+    d.cadre_ok = fd.get('cadre_ok') === 'oui';
+    if (!d.cadre_ok) e.cadre_ok = 'Merci de confirmer avoir pris connaissance du cadre.';
   }
 
   if (kind === 'soutien') {
@@ -205,8 +228,8 @@ export function validate(fd: FormData): Result {
 }
 
 export const KIND_LABELS: Record<FormKind, string> = {
-  individu: 'Inscription personne 50+',
-  opportunite: 'Proposition d’opportunité (organisation)',
+  individu: 'Inscription personne 50+ (cherche un mandat)',
+  opportunite: 'Proposition de mandat (mandant)',
   soutien: 'Proposition de soutien',
   mur: 'Contribution au mur de l’expérience',
 };

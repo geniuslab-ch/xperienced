@@ -4,13 +4,14 @@
  * des données (LPD, en vigueur depuis le 1er septembre 2023), notamment le devoir
  * d'informer (art. 19 LPD). À faire relire par une personne compétente.
  *
- * ⚠️ Elle indique que les données sont stockées en Suisse chez Infomaniak : la
- * réception des formulaires doit donc passer par la messagerie Infomaniak
- * (variables SMTP_*), et non par Google Sheets ou Resend (voir README).
+ * ⚠️ Les formulaires sont enregistrés dans Supabase (région : site.supabaseRegion) et,
+ * si les variables SMTP_* sont définies, copiés par e-mail dans la messagerie Infomaniak.
+ * N'activez pas Google Sheets ou Resend sans mettre cette page à jour (voir README).
  */
 import Prose from '../layouts/Prose.astro';
 import { site } from '../config/site';
 const contact = site.contactEmail;
+const region = site.supabaseRegion ?? '[À confirmer : région du projet Supabase]';
 ---
 <Prose title="Politique de confidentialité · Xperienced" description="Comment Xperienced traite vos données personnelles. Données stockées en Suisse." heading="Politique de confidentialité">
   <p>Dernière mise à jour : 19 octobre 2026</p>
@@ -25,8 +26,8 @@ const contact = site.contactEmail;
   <h2>2. Quelles données collectons-nous ?</h2>
   <p>Uniquement ce que vous nous transmettez via nos formulaires, et seulement le nécessaire :</p>
   <ul>
-    <li><strong>Inscription individuelle :</strong> prénom, moyen de contact préféré, e-mail et/ou téléphone, canton, ce que vous recherchez, quelques mots sur votre expérience et vos envies et, si vous le souhaitez, votre disponibilité.</li>
-    <li><strong>Proposition d’opportunité :</strong> nom de l’organisation, personne de contact, coordonnées professionnelles, description de l’opportunité.</li>
+    <li><strong>« Je cherche un mandat » :</strong> prénom, moyen de contact préféré, e-mail et/ou téléphone, canton, les types de mandats ou d’options qui vous intéressent, quelques mots sur votre expérience et, si vous le souhaitez, votre situation actuelle et votre disponibilité.</li>
+    <li><strong>« Je propose un mandat » :</strong> type de mandant (entreprise, association, particulier…), nom de l’organisation, personne de contact, coordonnées, description du besoin, lieu, durée et rémunération envisagées.</li>
     <li><strong>Soutien :</strong> nom, e-mail, la manière dont vous souhaitez aider, votre message.</li>
     <li><strong>Mur de l’expérience :</strong> votre phrase, la signature que vous choisissez et, si vous le souhaitez, votre e-mail.</li>
     <li><strong>Provenance de la visite :</strong> la campagne ou l’affiche par laquelle vous êtes arrivé·e (paramètres de lien, sans identifiant personnel).</li>
@@ -36,18 +37,19 @@ const contact = site.contactEmail;
   <h2>3. Pourquoi les utilisons-nous ?</h2>
   <ul>
     <li>Vous recontacter et répondre à votre demande ;</li>
-    <li>rechercher des opportunités qui pourraient vous correspondre et, <strong>avec votre accord</strong>, vous mettre en relation avec une organisation ;</li>
+    <li>rechercher des mandats qui pourraient vous correspondre et, <strong>avec votre accord</strong>, vous mettre en relation avec une organisation ;</li>
     <li>publier votre phrase sur le mur de l’expérience, uniquement si vous l’avez explicitement accepté ;</li>
     <li>mesurer, de manière agrégée, quelles campagnes fonctionnent.</li>
   </ul>
   <p>Nous ne vendons pas vos données et ne les utilisons pas à des fins publicitaires.</p>
 
   <h2>4. Où sont stockées vos données ?</h2>
-  <p><strong>En Suisse.</strong> Les informations envoyées via nos formulaires sont transmises par e-mail et conservées dans notre messagerie hébergée par <strong>Infomaniak Network SA</strong>, Rue Eugène-Marziano 25, 1227 Les Acacias (Genève), dans ses centres de données en Suisse.</p>
+  <p>Les informations envoyées via nos formulaires sont enregistrées dans une base de données hébergée par <strong>Supabase Inc.</strong> (États-Unis), dans sa région <strong>{region}</strong>. Une copie peut nous être transmise par e-mail dans notre messagerie hébergée par <strong>Infomaniak Network SA</strong>, Rue Eugène-Marziano 25, 1227 Les Acacias (Genève), dans ses centres de données en Suisse.</p>
+  <p>Supabase étant une société américaine, nous nous appuyons sur les garanties contractuelles prévues par son accord de traitement des données pour tout accès éventuel depuis l’étranger.</p>
   <p>Le site lui-même est hébergé par <strong>Vercel Inc.</strong> (États-Unis). Lors de l’envoi d’un formulaire, vos informations transitent par les serveurs de Vercel à Francfort (Allemagne) le temps de nous être transmises ; elles n’y sont pas enregistrées. Comme tout hébergeur, Vercel conserve brièvement des journaux techniques (par exemple l’adresse IP et la page demandée) pour assurer le fonctionnement et la sécurité du site. L’Allemagne figure parmi les pays reconnus par le Conseil fédéral comme offrant une protection adéquate des données ; pour l’accès éventuel de Vercel depuis les États-Unis, nous nous appuyons sur les garanties contractuelles prévues par son accord de traitement des données.</p>
 
   <h2>5. Qui y a accès ?</h2>
-  <p>Uniquement les membres de l’équipe Xperienced qui traitent les demandes. Vos coordonnées ne sont jamais transmises à un employeur ou à une association <strong>sans votre accord préalable</strong>.</p>
+  <p>Uniquement les membres de l’équipe Xperienced qui traitent les demandes. Vos coordonnées ne sont jamais transmises à un mandant <strong>sans votre accord préalable</strong>.</p>
 
   <h2>6. Combien de temps les conservons-nous ?</h2>
   <p>Vos données sont conservées tant que nous sommes en contact, puis supprimées au plus tard 24 mois après notre dernier échange. Vous pouvez demander leur suppression à tout moment.</p>

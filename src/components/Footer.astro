@@ -19,7 +19,7 @@ const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 
       <p>{site.address}</p>
       {site.privacyContact && <p>Personne de contact : {site.privacyContact}</p>}
       {site.contactEmail && <p><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>}
-      <p class="foot-swiss">Données stockées en Suisse</p>
+      {site.supabaseRegion?.includes('Suisse') && <p class="foot-swiss">Données stockées en Suisse</p>}
       {site.donation && <p class="foot-don">Dons : {site.donation}</p>}
     </div>
 

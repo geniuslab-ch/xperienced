@@ -41,7 +41,7 @@ export const campaigns: Campaign[] = [
   },
   {
     code: 'echange',
-    target: '/#partager',
+    target: '/#mandats',
     utm_campaign: 'echange-experience',
     utm_medium: 'qr',
     utm_source: 'evenement',
@@ -57,7 +57,7 @@ export const campaigns: Campaign[] = [
   },
   {
     code: 'talents',
-    target: '/#entreprises',
+    target: '/#mandants',
     utm_campaign: 'micro-affiche-employeurs',
     utm_medium: 'qr',
     utm_source: 'affiche',

@@ -8,7 +8,10 @@ const t = fr.final;
     <h2 id="final-title" class="final-title" set:html={rich(t.title)} />
     <div class="final-row">
       <p class="lead">{t.text}</p>
-      <a href="#inscription" class="btn btn--accent final-btn" data-track="final-premier-pas">{t.cta} <span class="arrow" aria-hidden="true">→</span></a>
+      <div class="final-ctas">
+        <a href="#inscription" class="btn btn--accent final-btn" data-track="final-cherche">{t.cta} <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#proposer" class="btn btn--ghost final-btn" data-track="final-propose">{t.secondary}</a>
+      </div>
     </div>
   </div>
 </section>
@@ -17,5 +20,6 @@ const t = fr.final;
   .final-title { font-size: var(--step-5); line-height: 0.95; letter-spacing: -0.045em; font-weight: 800; max-width: 15ch; }
   .final-title :global(em) { font-family: var(--font-serif); font-weight: 400; color: var(--accent); }
   .final-row { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: space-between; margin-top: 3rem; }
+  .final-ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
   .final-btn { font-size: var(--step-1); min-height: 4rem; padding-inline: 2rem; }
 </style>

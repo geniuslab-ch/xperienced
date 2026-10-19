@@ -17,7 +17,7 @@ test('inscription : erreurs claires puis confirmation, avec la campagne d’orig
   await form.getByLabel(/Votre canton/).selectOption('Vaud');
   await form.getByLabel(/^E-mail/).fill('pas-un-email');
   await form.getByLabel(/Un emploi/).check();
-  await form.getByLabel(/Votre expérience et vos envies/).fill('Logistique, formation d’apprentis.');
+  await form.getByLabel(/Votre expérience, en quelques mots/).fill('Logistique, formation d’apprentis.');
   await form.getByLabel(/J’accepte que Xperienced/).check();
   await form.getByRole('button', { name: 'Envoyer mon profil' }).click();
   await expect(form.locator('[data-error-for="email"]')).toContainText('ne semble pas valide');
@@ -42,35 +42,54 @@ test('le choix « par téléphone » rend le numéro obligatoire', async ({ page
   await expect(form.getByLabel(/^E-mail/)).not.toHaveAttribute('required', '');
 });
 
-test('les cartes « trois façons » pré-remplissent l’objectif', async ({ page }) => {
+test('les types de mandats et les autres options pré-remplissent le formulaire', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Je cherche du travail' }).click();
+  await page.getByRole('link', { name: /Ça m’intéresse.*Missions courtes/ }).click();
   const form = page.locator('#form-individu');
-  await expect(form.getByLabel(/Un emploi/)).toBeChecked();
-  await expect(form.getByLabel(/Des missions/)).toBeChecked();
-  await expect(form.getByLabel(/Du bénévolat/)).not.toBeChecked();
+  await expect(form.getByLabel(/Mission courte/)).toBeChecked();
+  await expect(form.getByLabel(/Un emploi salarié/)).not.toBeChecked();
+  await page.getByRole('link', { name: 'Je cherche un emploi salarié ou du bénévolat' }).click();
+  await expect(form.getByLabel(/Un emploi salarié/)).toBeChecked();
+  await expect(form.getByLabel(/Du bénévolat/)).toBeChecked();
+  await expect(form.getByLabel(/Mission courte/)).not.toBeChecked();
 });
 
-test('organisation : proposition d’opportunité, préremplie depuis « Devenir partenaire »', async ({ page }) => {
+test('les deux portes d’entrée mènent aux bons formulaires', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#mandats').getByRole('link', { name: /Je cherche un mandat/ }).click();
+  await expect(page).toHaveURL(/#inscription$/);
+  await page.locator('#mandats').getByRole('link', { name: /Je propose un mandat/ }).click();
+  await expect(page).toHaveURL(/#proposer$/);
+  await expect(page.locator('#form-opportunite')).toBeInViewport();
+});
+
+test('mandant : proposition de mandat, préremplie depuis « Devenir partenaire »', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Devenir partenaire' }).first().click();
   const form = page.locator('#form-opportunite');
-  await expect(form.getByLabel(/Type d’organisation/)).toHaveValue('association');
-  await expect(form.getByLabel(/Type d’opportunité/)).toHaveValue('partenariat');
+  await expect(form.getByLabel(/^Vous êtes/)).toHaveValue('association');
+  await expect(form.getByLabel(/Type de besoin/)).toHaveValue('partenariat');
 
-  await form.getByLabel(/Entreprise ou organisation/).fill('Atelier Répare-Tout');
+  await form.getByLabel(/^Vous êtes/).selectOption('particulier');
+  await form.getByLabel(/Type de besoin/).selectOption('administratif');
+  await form.getByLabel(/Nom de l’entreprise/).fill('Particulier');
   await form.getByLabel(/Personne de contact/).fill('Jean Exemple');
-  await form.getByLabel(/E-mail professionnel/).fill('jean@exemple.ch');
-  await form.getByLabel('Non rémunéré (bénévole)').check();
-  await form.getByLabel(/Description du besoin/).fill('Animer des après-midi de réparation.');
-  await form.getByLabel(/^Lieu/).fill('Lausanne');
+  await form.getByLabel(/^E-mail/).fill('jean@exemple.ch');
+  await form.getByLabel(/honoraires \(mandat indépendant\)/).check();
+  await form.getByLabel(/Description du mandat/).fill('Classer et numériser dix ans de documents administratifs.');
+  await form.getByLabel(/^Lieu/).fill('Genève');
   await form.getByLabel(/J’accepte que Xperienced/).check();
+  await form.getByRole('button', { name: 'Proposer ce mandat' }).click();
+  await expect(form.locator('[data-error-for="cadre_ok"]')).toContainText('cadre');
+  await form.getByLabel(/J’ai pris connaissance du/).check();
   await ageForms(page);
-  await form.getByRole('button', { name: 'Proposer cette opportunité' }).click();
+  await form.getByRole('button', { name: 'Proposer ce mandat' }).click();
   await expect(page.getByText('Merci pour votre proposition.')).toBeVisible();
   const s = await lastSubmission();
   expect(s.kind).toBe('opportunite');
-  expect(s.data.statut).toBe('non-remunere');
+  expect(s.data.type_org).toBe('particulier');
+  expect(s.data.statut).toBe('honoraires');
+  expect(s.data.cadre_ok).toBe(true);
 });
 
 test('soutien et mur de l’expérience', async ({ page }) => {

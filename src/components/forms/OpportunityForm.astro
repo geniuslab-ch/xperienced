@@ -8,32 +8,45 @@ const id = 'form-opportunite';
 ---
 <FormShell kind="opportunite" id={id}>
   <div class="form-grid form-grid--2">
-    <Field formId={id} name="organisation" label="Entreprise ou organisation" required autocomplete="organization" maxlength={120} />
-    <Field formId={id} name="type_org" type="select" label="Type d’organisation" required options={TYPES_ORG} />
+    <Field formId={id} name="type_org" type="select" label="Vous êtes" required options={TYPES_ORG} />
+    <Field formId={id} name="organisation" label="Nom de l’entreprise ou de l’organisation" required autocomplete="organization" maxlength={120} hint="Particulier : indiquez simplement « Particulier »." />
     <Field formId={id} name="contact_nom" label="Personne de contact" required autocomplete="name" maxlength={100} />
-    <Field formId={id} name="email" type="email" label="E-mail professionnel" required autocomplete="email" maxlength={120} />
+    <Field formId={id} name="email" type="email" label="E-mail" required autocomplete="email" maxlength={120} />
     <Field formId={id} name="telephone" type="tel" label="Téléphone" autocomplete="tel" maxlength={30} />
-    <Field formId={id} name="type_opportunite" type="select" label="Type d’opportunité" required options={TYPES_OPPORTUNITE} />
+    <Field formId={id} name="type_opportunite" type="select" label="Type de besoin" required options={TYPES_OPPORTUNITE} />
   </div>
 
-  <Choices formId={id} name="statut" legend="L’opportunité est-elle rémunérée ?" type="radio" required options={STATUTS} hint="Nous présentons chaque opportunité telle qu’elle est." />
-
-  <Field formId={id} name="description" type="textarea" label="Description du besoin" required maxlength={1500} rows={4}
-    placeholder="Ex. Nous cherchons quelqu’un pour accompagner nos deux apprentis en menuiserie, une demi-journée par semaine." />
+  <Field formId={id} name="description" type="textarea" label="Description du mandat" required maxlength={1500} rows={4}
+    hint="Le résultat attendu plutôt qu’un poste : qu’est-ce qui doit être fait, livré, résolu ?"
+    placeholder="Ex. Réorganiser notre stock avant un déménagement en mars : inventaire, plan d’implantation, formation de deux collaborateurs." />
   <Field formId={id} name="competences" type="textarea" label="Compétences ou expérience recherchées" maxlength={600} rows={3} />
 
   <div class="form-grid form-grid--2">
-    <Field formId={id} name="lieu" label="Lieu" required maxlength={120} placeholder="Ex. Lausanne, Nyon, Fribourg…" />
-    <Field formId={id} name="engagement" label="Engagement attendu" maxlength={200} placeholder="Ex. 2 jours/semaine, 3 mois, ponctuel…" />
+    <Field formId={id} name="lieu" label="Lieu" required maxlength={120} placeholder="Ex. Genève, Lausanne, Nyon…" />
+    <Field formId={id} name="engagement" label="Durée et volume estimés" maxlength={200} placeholder="Ex. 6 semaines, 2 jours/semaine" />
   </div>
 
-  <label class="choice">
-    <input type="checkbox" name="distance" value="oui" />
-    <span>Possible en partie ou totalement à distance</span>
-  </label>
+  <Choices formId={id} name="statut" legend="Rémunération" type="radio" required options={STATUTS} hint="Nous présentons chaque proposition telle qu’elle est." />
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="remuneration" label="Rémunération envisagée" maxlength={200} placeholder="Ex. honoraires à convenir, CHF 80.–/h, forfait…" />
+    <div class="field">
+      <label class="choice">
+        <input type="checkbox" name="distance" value="oui" />
+        <span>Possible en partie ou totalement à distance</span>
+      </label>
+    </div>
+  </div>
 
   <div class="form-grid form-grid--2">
     <Field formId={id} name="infos" type="textarea" label="Informations complémentaires" maxlength={1000} rows={3} />
     <Field formId={id} name="source" type="select" label="Comment avez-vous connu Xperienced ?" options={SOURCES} emptyOption="—" />
+  </div>
+
+  <div>
+    <label class="choice">
+      <input type="checkbox" name="cadre_ok" value="oui" required data-msg-required="Merci de confirmer avoir pris connaissance du cadre." aria-describedby="form-opportunite-cadre_ok-error" />
+      <span>J’ai pris connaissance du <a href="#cadre">cadre</a> : si la mission s’exerce comme un emploi (horaires, instructions, intégration durable), il s’agit d’un emploi salarié, avec les cotisations sociales qui en découlent.</span>
+    </label>
+    <p class="error" id="form-opportunite-cadre_ok-error" data-error-for="cadre_ok" aria-live="polite"></p>
   </div>
 </FormShell>

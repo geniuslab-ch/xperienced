@@ -27,6 +27,14 @@ export const site = {
    */
   activeRegion: null as string | null,
 
+  /**
+   * Région du projet Supabase où sont enregistrés les formulaires, telle qu'indiquée dans
+   * Supabase › Project Settings › General (ex. 'Zurich, Suisse' ou 'Francfort, Allemagne').
+   * Tant que la valeur est `null`, la politique de confidentialité affiche « [À confirmer] »
+   * et le bas de page n'annonce pas « Données stockées en Suisse ».
+   */
+  supabaseRegion: null as string | null,
+
   /** Informations de don (IBAN, TWINT…). Laisser `null` tant qu'aucun compte n'existe : la mention n'apparaît alors pas. */
   donation: null as string | null,
 

@@ -2,6 +2,8 @@
  * Transmission des formulaires.
  *
  * Canaux, activés par des variables d'environnement (jamais dans le code) :
+ *  ★ SUPABASE_SECRET_KEY (+ SUPABASE_URL) → base de données Supabase : chaque formulaire
+ *     devient une ligne dans sa table (voir supabase/schema.sql). C'est la base de référence.
  *  0. SMTP_HOST + SMTP_USER + SMTP_PASS + NOTIFY_EMAIL_TO → e-mail via un serveur SMTP.
  *     Recommandé : Infomaniak (mail.infomaniak.com), données stockées en Suisse.
  *  1. FORM_WEBHOOK_URL  → envoi JSON vers un webhook (Google Sheets via Apps Script,
@@ -32,18 +34,63 @@ type ScanEvent = Omit<Submission, 'kind'> & { kind: 'qr_scan' };
 
 const env = (k: string) => process.env[k]?.trim() || '';
 
+/** Projet Supabase de Xperienced (l'URL n'est pas secrète ; la clé, elle, l'est). */
+const DEFAULT_SUPABASE_URL = 'https://tdmlanvywfbzqjlzzqxu.supabase.co';
+const supabaseUrl = () => (env('SUPABASE_URL') || DEFAULT_SUPABASE_URL).replace(/\/+$/, '');
+const supabaseKey = () => env('SUPABASE_SECRET_KEY') || env('SUPABASE_SERVICE_ROLE_KEY');
+
+/** Une table par formulaire. */
+export const SUPABASE_TABLES: Record<FormKind, string> = {
+  individu: 'candidats',
+  opportunite: 'mandats_proposes',
+  soutien: 'soutiens',
+  mur: 'mur',
+};
+
 export function channels() {
   return {
+    supabase: Boolean(supabaseKey()),
     smtp: Boolean(env('SMTP_HOST') && env('SMTP_USER') && env('SMTP_PASS') && env('NOTIFY_EMAIL_TO')),
     webhook: Boolean(env('FORM_WEBHOOK_URL')),
     email: Boolean(env('RESEND_API_KEY') && env('NOTIFY_EMAIL_TO')),
-    devFile: process.env.NODE_ENV !== 'production' && !env('FORM_WEBHOOK_URL') && !env('RESEND_API_KEY') && !env('SMTP_HOST'),
+    devFile: process.env.NODE_ENV !== 'production' && !env('FORM_WEBHOOK_URL') && !env('RESEND_API_KEY') && !env('SMTP_HOST') && !supabaseKey(),
   };
 }
 
 export function isConfigured() {
   const c = channels();
-  return c.smtp || c.webhook || c.email || c.devFile;
+  return c.supabase || c.smtp || c.webhook || c.email || c.devFile;
+}
+
+/** Insère une ligne via l'API REST de Supabase, avec la clé secrète (côté serveur uniquement). */
+async function supabaseInsert(table: string, row: Record<string, unknown>, timeout = 10_000) {
+  const key = supabaseKey();
+  const headers: Record<string, string> = {
+    apikey: key,
+    'content-type': 'application/json',
+    prefer: 'return=minimal',
+  };
+  // Les anciennes clés « service_role » sont des JWT et doivent aussi être passées en Bearer.
+  if (key.startsWith('eyJ')) headers.authorization = `Bearer ${key}`;
+  const res = await fetch(`${supabaseUrl()}/rest/v1/${table}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(row),
+    signal: AbortSignal.timeout(timeout),
+  });
+  if (!res.ok) {
+    // On ne journalise que le code et le message d'erreur : le champ « details » de Supabase
+    // peut contenir la ligne refusée, donc des données personnelles.
+    const body = (await res.json().catch(() => ({}))) as { code?: string; message?: string };
+    throw new Error(`supabase ${table} ${res.status} ${body.code ?? ''} ${body.message ?? ''}`.trim());
+  }
+}
+
+async function toSupabase(s: Submission) {
+  const row: Record<string, unknown> = { public_id: s.id, created_at: s.received_at };
+  for (const [k, v] of Object.entries(s.data)) row[k] = v === '' ? null : v;
+  for (const [k, v] of Object.entries(s.meta)) row[k] = v;
+  await supabaseInsert(SUPABASE_TABLES[s.kind], row);
 }
 
 async function toWebhook(s: Submission | ScanEvent, timeout = 10_000) {
@@ -132,6 +179,7 @@ async function toDevFile(s: Submission) {
 export async function deliver(s: Submission): Promise<number> {
   const c = channels();
   const jobs: Promise<void>[] = [];
+  if (c.supabase) jobs.push(toSupabase(s));
   if (c.smtp) jobs.push(toSmtp(s));
   if (c.webhook) jobs.push(toWebhook(s));
   if (c.email) jobs.push(toEmail(s));
@@ -146,11 +194,18 @@ export async function deliver(s: Submission): Promise<number> {
 }
 
 /**
- * Enregistre un scan de QR code dans le webhook (onglet « qr_scan » de la feuille Google),
+ * Enregistre un scan de QR code dans Supabase (table qr_scans) et/ou le webhook,
  * pour garder un historique durable : les journaux gratuits de Vercel ou Render ne sont
  * conservés que peu de temps. Ne bloque jamais la redirection plus de 1,5 s.
  */
 export async function recordScan(code: string, campaign: string) {
+  if (supabaseKey()) {
+    try {
+      await supabaseInsert('qr_scans', { code, campagne: campaign }, 1500);
+    } catch (err) {
+      console.error(JSON.stringify({ event: 'qr_scan_store_error', error: String(err) }));
+    }
+  }
   if (!env('FORM_WEBHOOK_URL')) return;
   try {
     await toWebhook({

@@ -7,11 +7,12 @@ import ExpiredCv from '../components/ExpiredCv.astro';
 import Paths from '../components/sections/Paths.astro';
 import How from '../components/sections/How.astro';
 import Register from '../components/sections/Register.astro';
+import Employers from '../components/sections/Employers.astro';
 import Final from '../components/sections/Final.astro';
 ---
 <Page
   title="EXPIRÉ ? Selon qui ? · Xperienced"
-  description="Votre expérience n’a pas de date de péremption. Découvrez ce qui reste possible après 50 ans : emploi, missions, bénévolat, transmission. Une initiative associative suisse."
+  description="Votre expérience n’a pas de date de péremption. Mandats et missions rémunérées pour les 50 ans et plus : conseil, missions courtes, soutien administratif, mentorat, projets. Une initiative associative suisse."
   ogImageAlt="Un CV tamponné « EXPIRÉ », le tampon barré."
 >
   <section class="exp" aria-labelledby="exp-title">
@@ -19,10 +20,10 @@ import Final from '../components/sections/Final.astro';
       <div>
         <p class="kicker">Campagne · Le CV expiré</p>
         <h1 id="exp-title" class="exp-title"><span class="exp-word">Expiré&#8239;?</span> Selon qui&#8239;?</h1>
-        <p class="lead exp-lead">Votre expérience n’a pas de date de péremption. Vous avez scanné l’affiche : c’est déjà un premier pas. Voici ce qui reste possible.</p>
+        <p class="lead exp-lead">Votre expérience n’a pas de date de péremption. Conseil, missions courtes, soutien administratif, mentorat, projets : des mandats rémunérés, à votre rythme. Vous avez scanné l’affiche : c’est déjà un premier pas.</p>
         <div class="exp-ctas">
-          <a href="#inscription" class="btn btn--accent" data-track="expire-inscription">Découvrir ce qui reste possible <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="/" class="link-arrow" data-track="expire-accueil">Qu’est-ce que Xperienced&#8239;?</a>
+          <a href="#inscription" class="btn btn--accent" data-track="expire-inscription">Je cherche un mandat <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#proposer" class="link-arrow" data-track="expire-propose">Je propose un mandat</a>
         </div>
       </div>
       <ExpiredCv />
@@ -31,6 +32,7 @@ import Final from '../components/sections/Final.astro';
   <Paths />
   <How />
   <Register />
+  <Employers />
   <Final />
 </Page>
 <style>

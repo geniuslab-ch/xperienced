@@ -1,0 +1,51 @@
+---
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.cadre;
+---
+<section id="cadre" class="section section--sand" aria-labelledby="cadre-title">
+  <div class="wrap">
+    <p class="kicker">{t.kicker}</p>
+    <h2 id="cadre-title" class="title" set:html={rich(t.title)} />
+    <p class="lead">{t.lead}</p>
+
+    <div class="compare">
+      <div class="col col--mandat reveal">
+        <h3>{t.mandatTitle}</h3>
+        <ul>{t.mandat.map((m) => <li>{m}</li>)}</ul>
+      </div>
+      <div class="col col--emploi reveal">
+        <h3>{t.emploiTitle}</h3>
+        <ul>{t.emploi.map((m) => <li>{m}</li>)}</ul>
+      </div>
+    </div>
+    <p class="consequence">{t.consequence}</p>
+
+    <div class="checks reveal">
+      <h3>{t.checksTitle}</h3>
+      <ul>{t.checks.map((c) => <li>{c}</li>)}</ul>
+      <p class="note">{t.note}</p>
+    </div>
+  </div>
+</section>
+<style>
+  .compare { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 860px) { .compare { grid-template-columns: 1fr 1fr; } }
+  .col { border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.25rem); }
+  .col--mandat { background: var(--paper); border: 2px solid var(--ink); }
+  .col--emploi { background: transparent; border: 2px dashed var(--ink-soft); }
+  .col h3 { font-size: var(--step-2); margin-bottom: 1.1rem; }
+  .col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
+  .col li { padding-left: 1.75rem; position: relative; line-height: 1.45; }
+  .col--mandat li::before { content: '✓'; position: absolute; left: 0; font-weight: 800; color: var(--ok); }
+  .col--emploi li::before { content: '→'; position: absolute; left: 0; font-weight: 800; color: var(--accent-ink); }
+  .consequence { margin-top: 1.5rem; max-width: 70ch; font-weight: 550; }
+  .checks { margin-top: clamp(2.5rem, 5vw, 3.5rem); background: var(--ink); color: var(--ivory); border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .checks h3 { font-size: var(--step-2); color: var(--lime); margin-bottom: 1.1rem; }
+  .checks ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.8rem; }
+  @media (min-width: 860px) { .checks ul { grid-template-columns: 1fr 1fr; gap: 1rem 2.5rem; } }
+  .checks li { padding-left: 1.5rem; position: relative; line-height: 1.5; }
+  .checks li::before { content: '!'; position: absolute; left: 0; font-weight: 800; color: var(--accent); }
+  .note { margin-top: 1.5rem; font-size: var(--step--1); color: #d9d6e3; font-style: italic; }
+  .checks :global(:focus-visible) { box-shadow: 0 0 0 3px var(--ink), 0 0 0 6px var(--lime); }
+</style>

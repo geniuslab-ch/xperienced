@@ -11,6 +11,7 @@ import Associations from '../components/sections/Associations.astro';
 import Wall from '../components/sections/Wall.astro';
 import Join from '../components/sections/Join.astro';
 import Faq from '../components/sections/Faq.astro';
+import Cadre from '../components/sections/Cadre.astro';
 import Final from '../components/sections/Final.astro';
 import { fr } from '../content/fr';
 
@@ -31,11 +32,12 @@ const jsonLd = {
 <Page title={fr.meta.title} description={fr.meta.description} ogImageAlt={fr.meta.ogImageAlt} jsonLd={jsonLd}>
   <Hero />
   <Ticker />
-  <Question />
   <Paths />
+  <Question />
   <How />
   <Register />
   <Employers />
+  <Cadre />
   <Associations />
   <Wall />
   <Join />

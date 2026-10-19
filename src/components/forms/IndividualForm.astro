@@ -2,7 +2,7 @@
 import FormShell from './FormShell.astro';
 import Field from './Field.astro';
 import Choices from './Choices.astro';
-import { CANTONS, OTHER_LOCATIONS, OBJECTIFS, DISPONIBILITES, SOURCES } from '../../lib/forms';
+import { CANTONS, OTHER_LOCATIONS, MANDATS, AUTRES, DISPONIBILITES, SITUATIONS, SOURCES } from '../../lib/forms';
 
 const id = 'form-individu';
 ---
@@ -19,14 +19,34 @@ const id = 'form-individu';
     <Field formId={id} name="telephone" type="tel" label="Téléphone" reqFor="telephone" autocomplete="tel" maxlength={30} placeholder="079 123 45 67" />
   </div>
 
-  <Choices formId={id} name="objectifs" legend="Qu’est-ce qui vous intéresse ?" hint="Plusieurs réponses possibles." required options={OBJECTIFS} />
+  <fieldset class="field" data-group="objectifs" data-group-required="" aria-describedby={`${id}-objectifs-hint ${id}-objectifs-error`}>
+    <legend>Quels mandats vous intéressent ? <span class="req">(obligatoire)</span></legend>
+    <p class="hint" id={`${id}-objectifs-hint`}>Plusieurs réponses possibles. L’emploi salarié et le bénévolat sont des options distinctes.</p>
+    <div class="choices choices--2">
+      {Object.entries(MANDATS).map(([value, label]) => (
+        <label class="choice"><input type="checkbox" name="objectifs" value={value} /><span>{label}</span></label>
+      ))}
+    </div>
+    <p class="choices-sub">Autres options</p>
+    <div class="choices choices--2">
+      {Object.entries(AUTRES).map(([value, label]) => (
+        <label class="choice choice--alt"><input type="checkbox" name="objectifs" value={value} /><span>{label}</span></label>
+      ))}
+    </div>
+    <p class="error" id={`${id}-objectifs-error`} data-error-for="objectifs" aria-live="polite"></p>
+  </fieldset>
 
-  <Field formId={id} name="competences" type="textarea" label="Votre expérience et vos envies, en quelques mots" required maxlength={800} rows={4}
-    hint="Métiers, compétences, passions, ce que vous aimeriez faire… Pas besoin de CV."
-    placeholder="Ex. 25 ans dans la logistique, j’aime organiser et former. J’aimerais un temps partiel ou transmettre à des jeunes." />
+  <Field formId={id} name="competences" type="textarea" label="Votre expérience, en quelques mots" required maxlength={800} rows={4}
+    hint="Métiers, domaines d’expertise, ce que vous aimeriez apporter… Pas besoin de CV."
+    placeholder="Ex. 25 ans dans la logistique, cheffe d’entrepôt. Je peux réorganiser un stock, former une équipe, structurer des procédures." />
 
   <div class="form-grid form-grid--2">
+    <Field formId={id} name="situation" type="select" label="Votre situation actuelle" options={SITUATIONS} emptyOption="—" hint="Pour vous orienter sur le cadre (statut, AVS…)." />
     <Field formId={id} name="disponibilite" type="select" label="Votre disponibilité" options={DISPONIBILITES} emptyOption="Je ne sais pas encore" />
-    <Field formId={id} name="source" type="select" label="Comment avez-vous connu Xperienced ?" options={SOURCES} emptyOption="—" />
   </div>
+  <Field formId={id} name="source" type="select" label="Comment avez-vous connu Xperienced ?" options={SOURCES} emptyOption="—" />
 </FormShell>
+<style>
+  .choices-sub { margin-top: 1rem; font-size: var(--step--1); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .choice--alt { background: transparent; border-style: dashed; }
+</style>

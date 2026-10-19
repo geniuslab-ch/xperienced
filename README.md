@@ -2,7 +2,7 @@
 
 **L’expérience n’a pas de date de péremption.**
 
-Site de lancement de Xperienced, initiative associative suisse qui aide les personnes de 50 ans et plus à trouver un emploi, une mission, une activité qui a du sens et du lien social, et qui connecte entreprises, associations et partenaires à leur expérience.
+Site de lancement de Xperienced, start-up associative suisse qui met en relation des personnes de 50 ans et plus avec les entreprises, associations et particuliers qui ont besoin de leur expérience. **Offre principale : mandats et missions rémunérées** (conseil, missions courtes, soutien administratif, mentorat, projets). L’emploi salarié et le bénévolat restent des options distinctes.
 
 - 🇫🇷 Français (Suisse romande) d’abord, architecture prête pour l’allemand et l’italien.
 - 💸 Conçu pour coûter CHF 0 par mois au démarrage (GitHub + Vercel, outils gratuits).
@@ -14,7 +14,9 @@ Documents utiles :
 |----------|---------|
 | [`docs/CHECKLIST-LANCEMENT.md`](docs/CHECKLIST-LANCEMENT.md) | Ce qui est prêt, ce qui manque, ce qu’il faut configurer |
 | [`docs/KIT-DE-LANCEMENT.md`](docs/KIT-DE-LANCEMENT.md) | Affiches, posts, scripts vidéo, e-mail employeurs, pitch presse, plan sur 30 jours, tableau de bord |
+| [`docs/CADRE-JURIDIQUE-MANDATS.md`](docs/CADRE-JURIDIQUE-MANDATS.md) | **Points juridiques à faire vérifier avant le lancement** (indépendance, LSE, AVS, chômage, retraite…) |
 | [`docs/PROTECTION-DES-DONNEES.md`](docs/PROTECTION-DES-DONNEES.md) | Notes LPD et points à vérifier |
+| [`supabase/schema.sql`](supabase/schema.sql) | Tables de la base de données (à exécuter une fois dans Supabase) |
 | [`docs/google-sheets-webhook.gs`](docs/google-sheets-webhook.gs) | Recevoir les formulaires dans Google Sheets (gratuit) |
 
 ---
@@ -25,7 +27,8 @@ Tout se fait directement sur GitHub : ouvrez le fichier, cliquez sur le crayon �
 
 | Je veux changer… | Fichier |
 |------------------|---------|
-| Les textes de la page (titres, paragraphes, FAQ, boutons) | `src/content/fr.ts` |
+| Les textes de la page (titres, paragraphes, FAQ, boutons, section « Un cadre clair ») | `src/content/fr.ts` |
+| Les choix des formulaires (types de mandats, situations, rémunération…) | `src/lib/forms.ts` |
 | Nom légal, adresse, e-mail, réseaux sociaux, informations de don | `src/config/site.ts` |
 | Les phrases publiées sur le mur de l’expérience | `src/content/wall.ts` |
 | Les affiches (titres, messages) | `src/content/posters.ts` |
@@ -120,7 +123,9 @@ Le fichier `render.yaml` permet aussi de déployer sur [Render](https://render.c
 | Variable | Obligatoire | Rôle |
 |----------|-------------|------|
 | `SITE_URL` | Oui sur Render, facultatif sur Vercel | Adresse publique (SEO, liens de partage, QR codes). Sur Vercel, l’adresse de production du projet est utilisée par défaut |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` + `NOTIFY_EMAIL_TO` | **Recommandé** | E-mail via la messagerie Infomaniak (données en Suisse) |
+| `SUPABASE_SECRET_KEY` | **Oui** | Clé secrète Supabase (serveur uniquement) : enregistre les formulaires et les scans QR |
+| `SUPABASE_URL` | Non | Par défaut `https://tdmlanvywfbzqjlzzqxu.supabase.co` |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` + `NOTIFY_EMAIL_TO` | Recommandé | Notification e-mail via la messagerie Infomaniak |
 | `FORM_WEBHOOK_URL` | Option (hors Suisse) | Reçoit chaque formulaire en JSON (Google Sheets, Make, n8n, Zapier, CRM…) |
 | `FORM_WEBHOOK_SECRET` | Recommandé avec le webhook | Secret partagé, transmis dans l’en-tête `X-Xperienced-Secret` et dans le champ `secret` |
 | `RESEND_API_KEY` + `NOTIFY_EMAIL_TO` | Option (hors Suisse) | E-mail à l’équipe pour chaque envoi (Resend, offre gratuite) |
@@ -136,20 +141,40 @@ Les variables `PUBLIC_…` et `SITE_URL` sont lues **au moment du build** : red�
 
 **Tant qu’aucun canal n’est configuré en production, le site affiche « Le formulaire n’est pas encore activé : votre demande n’a pas été envoyée ».** Il ne fait jamais croire qu’une demande a été reçue.
 
-**Choix retenu : messagerie Infomaniak (données stockées en Suisse).** C’est ce qu’annoncent la politique de confidentialité, les mentions légales et le bas de page.
+**Base de référence : Supabase** (projet `https://tdmlanvywfbzqjlzzqxu.supabase.co`). Chaque formulaire devient une ligne dans sa table, consultable dans *Supabase › Table Editor* :
+
+| Formulaire | Table |
+|------------|-------|
+| Je cherche un mandat | `candidats` |
+| Je propose un mandat | `mandats_proposes` |
+| Soutenir Xperienced | `soutiens` |
+| Mur de l’expérience | `mur` |
+| Scans de QR codes | `qr_scans` (+ vue `qr_scans_par_semaine`) |
+
+Mise en place (10 minutes) :
+
+1. **Créer les tables :** Supabase › *SQL Editor* › *New query*, collez le contenu de [`supabase/schema.sql`](supabase/schema.sql), puis *Run*.
+2. **Récupérer la clé secrète :** *Project Settings › API Keys* › clé **secrète** (`sb_secret_…`), ou l’ancienne clé `service_role`. ⚠️ Ne jamais la publier ni la coller dans le code : elle donne un accès complet à la base.
+3. **Dans Vercel**, *Settings › Environment Variables* : `SUPABASE_SECRET_KEY` = cette clé (et `SUPABASE_URL` seulement si le projet change). Puis **Redeploy**.
+4. Vérifiez `https://VOTRE-SITE/api/health` : `"supabase": true`. Envoyez un formulaire de test de chaque type et vérifiez qu’il apparaît dans la table.
+5. **Région :** notez la région du projet (*Project Settings › General*) dans `supabaseRegion` (`src/config/site.ts`). Si c’est Zurich, le bas de page affichera « Données stockées en Suisse ».
+
+Sécurité : les tables ont la sécurité au niveau des lignes (RLS) activée **sans aucune règle publique**. Le navigateur n’a jamais accès à Supabase ; seul le serveur du site écrit, avec la clé secrète. La colonne `suivi` (« nouveau » par défaut) sert à suivre chaque demande à la main.
+
+**En complément (recommandé) : une notification e-mail via Infomaniak**, pour réagir vite à chaque nouvelle demande :
 
 1. Dans Infomaniak, créez (ou choisissez) une adresse e-mail, par ex. `formulaires@votre-domaine.ch`.
-2. Dans Vercel, *Settings › Environment Variables*, ajoutez :
+2. Dans Vercel, ajoutez :
    - `SMTP_HOST` = `mail.infomaniak.com`
    - `SMTP_PORT` = `465`
    - `SMTP_USER` = l’adresse e-mail Infomaniak
    - `SMTP_PASS` = son mot de passe (ou un mot de passe d’application si la double authentification est activée)
-   - `NOTIFY_EMAIL_TO` = la ou les boîtes qui reçoivent les formulaires
-3. Redéployez, vérifiez `/api/health` (`"smtp": true`) et envoyez un formulaire de test de chaque type.
+   - `NOTIFY_EMAIL_TO` = la ou les boîtes qui reçoivent les notifications
+3. Redéployez ; `/api/health` affiche `"smtp": true`.
 
-Chaque formulaire arrive alors par e-mail dans votre messagerie Infomaniak, avec l’adresse de la personne en « Répondre à ».
+Une demande est acceptée dès qu’au moins un canal l’a reçue ; une erreur sur l’un des canaux est inscrite dans les journaux (sans donnée personnelle).
 
-> ⚠️ Les autres options ci-dessous stockent les données **hors de Suisse** (Google, Resend : États-Unis). Si vous les activez, la mention « données stockées en Suisse » devient fausse : mettez d’abord à jour `src/pages/confidentialite.astro`, `src/pages/mentions-legales.astro` et le bas de page.
+> ⚠️ Les options ci-dessous envoient les données à d’autres prestataires (Google, Resend : États-Unis). Si vous les activez, mettez d’abord à jour `src/pages/confidentialite.astro` et `src/pages/mentions-legales.astro`.
 
 Autres options :
 
@@ -179,10 +204,11 @@ Pensez à indiquer les outils réellement utilisés dans la politique de confide
 
 - Chaque affiche pointe vers une adresse courte `https://VOTRE-SITE/q/<code>`, définie dans `src/config/campaigns.ts`.
 - À chaque scan, le serveur redirige vers la bonne page avec les paramètres UTM et :
+  - l’enregistre dans la table Supabase **`qr_scans`** (code, campagne, date — aucune donnée personnelle) ; la vue `qr_scans_par_semaine` donne directement le nombre de scans par affiche et par semaine ;
   - si un webhook est configuré, l’envoie aussi (par ex. onglet **`qr_scan`** d’une feuille Google — aucune donnée personnelle, seulement le code, la campagne et la date) ;
   - écrit aussi `{"event":"qr_scan","code":"cv",…}` dans les journaux de l’hébergeur (Vercel : *Logs* ; Render : *Logs*). Ces journaux gratuits ne sont conservés que peu de temps.
 - Relevez les chiffres chaque semaine dans le tableau de bord (`docs/tableau-de-bord.csv`).
-- La campagne d’origine est jointe à chaque formulaire (`meta.utm_campaign`) : on sait quelle affiche a produit quelle inscription.
+- La campagne d’origine est jointe à chaque formulaire (colonnes `utm_campaign`, `utm_source`, `ref` dans Supabase) : on sait quelle affiche a produit quelle inscription.
 - Chaque envoi réussi écrit aussi `{"event":"form_submitted","kind":…,"utm_campaign":…}` dans les journaux, sans donnée personnelle.
 - Si Plausible ou Umami est activé, les événements `CTA` (clic sur un bouton, avec son identifiant), `Formulaire commencé`, `Inscription`, `Erreur formulaire` et `Partage` sont envoyés automatiquement.
 
@@ -204,5 +230,6 @@ L’architecture est prête, mais **aucune traduction automatique n’a été pu
 
 ## 8. Qualité
 
+- `npm test` vérifie aussi l’enregistrement dans Supabase, avec un faux serveur Supabase (`e2e/mock-supabase.mjs`) : bonne table, bonne clé, aucune clé visible par le navigateur.
 - `npm test` vérifie : pages et liens, ancres internes, redirections QR, formulaires (erreurs, succès, sans JavaScript, robots, refus honnête si non configuré), navigation clavier et mobile, absence de défilement horizontal de 320 à 1440 px, taille des boutons, accessibilité WCAG 2.1 AA (axe).
 - GitHub Actions lance ces vérifications à chaque modification (`.github/workflows/ci.yml`).

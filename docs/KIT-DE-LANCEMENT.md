@@ -1,12 +1,16 @@
 # Kit de lancement Xperienced — guérilla marketing à CHF 0–500
 
+> **Positionnement : « Mandats et missions rémunérées ».** Message central : *L’expérience n’a pas de date de péremption.*
+> Deux appels à l’action partout : **« Je cherche un mandat »** (personnes 50+) et **« Je propose un mandat »** (entreprises, associations, particuliers). L’emploi salarié et le bénévolat restent des options distinctes.
+>
 > **L’idée centrale : faire remarquer à la société l’expérience qu’elle a appris à ne plus voir.**
 > On ne demande pas d’être « gentil avec les seniors ». On révèle ce que tout le monde rate.
 
 Règles du jeu, valables pour tout ce kit :
 
 - **Jamais d’affichage sans autorisation** : pas d’autocollants sauvages, pas de vandalisme, pas d’intrusion. On affiche chez des partenaires qui ont dit oui.
-- **Jamais de fausse promesse** : on ne promet ni emploi, ni placement, ni rémunération. On parle de « connexions » et d’« opportunités qui se construisent ».
+- **Jamais de fausse promesse** : on ne promet ni mandat, ni emploi, ni placement, ni rémunération. On n’annonce jamais de mandats disponibles qui n’existent pas.
+- **Jamais de raccourci juridique** : un « mandat » doit être une vraie activité indépendante. Ne pas présenter un emploi déguisé comme un mandat (voir `docs/CADRE-JURIDIQUE-MANDATS.md`). On parle de « connexions » et d’« opportunités qui se construisent ».
 - **Jamais de faux témoignage** : les situations imaginées portent la mention « Situation fictive ». Les vraies histoires ne sont publiées qu’avec un accord écrit.
 - **Pas de chiffres inventés** : si une statistique est utilisée, elle vient d’une source officielle citée (OFS, SECO…) et vérifiée le jour même.
 - **Pas d’opposition entre générations** : le message n’est jamais « les jeunes contre les vieux », mais « ensemble, avec l’expérience ».
@@ -43,18 +47,18 @@ Toutes les affiches sont prêtes à imprimer sur **`/affiches`** (A4, QR codes i
 - **QR :** Changeons la suite. → `/q/candidat`
 - **Mention obligatoire :** Situation fictive.
 
-### 3. « Votre prochain meilleur collaborateur a peut-être simplement 58 ans. »
-- **Public :** employeurs, PME, commerces
-- **Titre :** Votre prochain meilleur collaborateur a peut-être simplement 58 ans.
-- **Message :** Il sait résoudre des problèmes que certains n’ont pas encore rencontrés.
-- **QR :** Trouver des talents expérimentés. → `/q/talents`
-- **Mention :** Situation fictive.
+### 3. « Un besoin ponctuel ? Quelqu’un l’a déjà résolu cent fois. »
+- **Public :** mandants — PME, commerces, associations, particuliers
+- **Titre :** Un besoin ponctuel ? Quelqu’un l’a déjà résolu cent fois.
+- **Message :** Confiez un mandat à une personne de 50 ans et plus. Sans engagement.
+- **QR :** Je propose un mandat. → `/q/talents`
+- **Variante réseaux :** « Votre prochain meilleur collaborateur a peut-être simplement 58 ans. » (mention « Situation fictive »).
 
 ### 4. « Vous avez encore beaucoup à apporter. »
 - **Public :** personnes 50+
 - **Titre :** Vous avez encore beaucoup à apporter.
-- **Message :** Quelqu’un cherche peut-être exactement votre expérience.
-- **QR :** Découvrez Xperienced. → `/q/moi`
+- **Message :** Conseil, missions, mentorat : proposez votre expérience en mandat.
+- **QR :** Je cherche un mandat. → `/q/moi`
 
 ### 5. « Votre projet cherche des forces vives ? »
 - **Public :** associations, communes, projets locaux
@@ -78,10 +82,10 @@ Visuel 1 : CV tamponné « EXPIRÉ ». Visuel 2 : le tampon barré. Visuel 3 : �
 > Premier pas → lien en bio.
 
 **2 · LinkedIn — pour les employeurs**
-> Vous cherchez quelqu’un d’opérationnel, qui sait former vos apprentis et garder son calme quand tout brûle ?
-> Vous l’avez peut-être écarté·e sans le savoir.
-> Xperienced construit un réseau entre des personnes expérimentées (50+) et des organisations qui ont besoin de leurs compétences. On démarre, on est honnêtes sur notre taille, et on cherche nos premiers partenaires.
-> Un besoin, même petit ? Décrivez-le en 3 minutes : [lien]
+> Un audit de vos processus, trois semaines de renfort, un dossier de financement à monter, un mentor pour une jeune équipe ?
+> Quelqu’un l’a déjà fait cent fois. Il ou elle a peut-être 58 ans et cherche justement un mandat.
+> Xperienced met en relation des professionnel·le·s de 50 ans et plus avec des entreprises, associations et particuliers, autour de mandats rémunérés. On démarre, on est honnêtes sur notre taille, et on cherche nos premiers mandants.
+> Un besoin, même petit ? Décrivez-le en 3 minutes → « Je propose un mandat » : [lien]
 
 **3 · Instagram Reel / TikTok — question de rue**
 Texte à l’écran : « On a demandé : qu’est-ce que 30 ans de métier vous ont appris ? »
@@ -142,19 +146,21 @@ Une personne 50+ montre un geste utile (réparer une chaise, négocier un prix, 
 
 ---
 
-## D. E-mail aux employeurs
+## D. E-mail aux mandants (entreprises, associations)
 
-**Objet :** Une piste pour vos besoins en compétences (sans engagement)
+**Objet :** Un besoin ponctuel ? Une piste expérimentée (sans engagement)
 
 > Bonjour [Prénom],
 >
 > Je m’appelle [Prénom Nom] et je lance avec quelques personnes **Xperienced**, une jeune initiative associative en Suisse romande. Notre but : connecter des personnes de 50 ans et plus, qui ont de l’expérience et l’envie de l’utiliser, avec des organisations qui en ont besoin.
 >
-> Je vous écris parce que [raison précise : votre entreprise forme des apprentis / vous recrutez un poste X / vous avez publié une annonce Y].
+> Je vous écris parce que [raison précise : un projet que vous lancez / un pic d’activité / vos apprentis à accompagner].
 >
-> Pour être transparent : nous démarrons. Notre réseau se construit en ce moment et nous ne pouvons rien garantir. Mais si vous avez un besoin, même modeste — un renfort temporaire, une mission ponctuelle, un mentor pour vos apprentis, un temps partiel — nous serions heureux d’essayer de vous mettre en relation avec une personne qui correspond.
+> Notre offre principale : des **mandats et missions rémunérées** confiés à des professionnel·le·s de 50 ans et plus — conseil, renfort de quelques semaines, soutien administratif, mentorat, projet défini.
 >
-> Décrire un besoin prend environ 3 minutes : [lien vers /#proposer]
+> Pour être transparent : nous démarrons. Notre réseau se construit en ce moment et nous ne pouvons rien garantir. Le contrat se conclut directement entre vous et la personne ; si la mission s’exerce en réalité comme un emploi (horaires, instructions, intégration durable), nous la présentons comme un emploi salarié.
+>
+> Décrire un mandat prend environ 3 minutes : [lien vers /#proposer]
 > Ou, plus simple : répondez à cet e-mail et proposez-moi 15 minutes d’échange.
 >
 > Merci pour votre attention,
@@ -207,6 +213,8 @@ Ce qui est déjà en place sur le site :
 ---
 
 ## G. Plan de lancement sur 30 jours (budget max. CHF 500)
+
+> Priorité absolue : **les premiers mandats réels**. Sans mandants, les inscriptions de personnes 50+ restent sans suite. Visez d’abord 10 conversations avec des mandants (PME, associations, communes de votre entourage), avant de multiplier les affiches pour les personnes 50+.
 
 **Avant le jour 1 :** remplir les informations de l’association (voir `docs/CHECKLIST-LANCEMENT.md`), activer la réception des formulaires, faire un envoi test de chaque formulaire.
 

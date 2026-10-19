@@ -6,14 +6,11 @@ const t = fr.forms;
 <section id="inscription" class="section" aria-labelledby="register-title">
   <div class="wrap register">
     <div class="register-intro">
-      <p class="kicker">Inscription · personnes 50+</p>
+      <p class="kicker">{t.individuKicker}</p>
       <h2 id="register-title" class="title">{t.individuTitle}</h2>
       <p class="lead">{t.individuLead}</p>
       <ul class="register-promises">
-        <li>Gratuit pour vous, sans frais cachés</li>
-        <li>Pas de CV à fournir pour commencer</li>
-        <li>Vous choisissez comment nous vous recontactons</li>
-        <li>Vos coordonnées ne sont transmises à personne sans votre accord</li>
+        {t.individuPromises.map((p) => <li>{p}</li>)}
       </ul>
     </div>
     <div class="register-form">

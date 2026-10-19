@@ -24,6 +24,16 @@ services:
         value: "1"
       - key: SITE_URL            # ex. https://xperienced.onrender.com puis votre domaine
         sync: false
+      - key: SUPABASE_SECRET_KEY # clé secrète Supabase (voir README, section 5)
+        sync: false
+      - key: SMTP_HOST
+        value: mail.infomaniak.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
       - key: FORM_WEBHOOK_URL    # Google Apps Script / Make / n8n… (voir README)
         sync: false
       - key: FORM_WEBHOOK_SECRET

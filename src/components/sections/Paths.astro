@@ -3,38 +3,83 @@ import { fr } from '../../content/fr';
 import { rich } from '../../lib/rich';
 const t = fr.paths;
 ---
-<section id="chemins" class="section" aria-labelledby="paths-title">
+<section id="mandats" class="section" aria-labelledby="paths-title">
   <div class="wrap">
     <p class="kicker">{t.kicker}</p>
     <h2 id="paths-title" class="title" set:html={rich(t.title)} />
-    <ul class="cards">
-      {t.cards.map((c, i) => (
-        <li id={c.id === 'partager' ? 'partager' : undefined} class:list={['card', `card--${i + 1}`, 'reveal']}>
-          <span class="card-num" aria-hidden="true">{c.number}</span>
-          <h3>{c.title}</h3>
-          <p>{c.text}</p>
-          <ul class="card-tags" aria-label="Exemples">{c.tags.map((tag) => <li>{tag}</li>)}</ul>
-          <a href="#inscription" class="btn card-cta" data-track={`chemin-${c.id}`} data-preset={`form-individu:objectifs:${c.objectifs.join(':')}`}>
-            {c.cta} <span class="arrow" aria-hidden="true">→</span>
-          </a>
+
+    <div class="doors">
+      <article class="door door--seek reveal" aria-labelledby="door-seek">
+        <p class="door-label">{t.seeker.label}</p>
+        <h3 id="door-seek">{t.seeker.title}</h3>
+        <p>{t.seeker.text}</p>
+        <ul>{t.seeker.points.map((p) => <li>{p}</li>)}</ul>
+        <a href="#inscription" class="btn" data-track="porte-cherche">{t.seeker.cta} <span class="arrow" aria-hidden="true">→</span></a>
+      </article>
+      <article class="door door--give reveal" aria-labelledby="door-give">
+        <p class="door-label">{t.giver.label}</p>
+        <h3 id="door-give">{t.giver.title}</h3>
+        <p>{t.giver.text}</p>
+        <ul>{t.giver.points.map((p) => <li>{p}</li>)}</ul>
+        <a href="#proposer" class="btn btn--lime" data-track="porte-propose">{t.giver.cta} <span class="arrow" aria-hidden="true">→</span></a>
+      </article>
+    </div>
+
+    <h3 class="types-title">{t.typesTitle}</h3>
+    <ul class="types">
+      {t.types.map((ty, i) => (
+        <li class="type reveal">
+          <span class="type-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h4>{ty.title}</h4>
+          <p>{ty.text}</p>
+          <a href="#inscription" class="link-arrow" data-track={`type-${ty.id}`} data-preset={`form-individu:objectifs:${ty.id}`}>Ça m’intéresse<span class="sr-only"> : {ty.title}</span></a>
         </li>
       ))}
     </ul>
+
+    <div class="others">
+      <p class="others-title">{t.othersTitle}</p>
+      <ul>
+        {t.others.map((o) => (
+          <li>
+            <a href="#inscription" data-track={`autre-${o.id}`} data-preset={`form-individu:objectifs:${o.id}`}><strong>{o.label}</strong></a>
+            <span>{o.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   </div>
 </section>
 <style>
-  .cards { list-style: none; padding: 0; margin: clamp(2.5rem, 5vw, 4rem) 0 0; display: grid; gap: 1.25rem; }
-  @media (min-width: 900px) { .cards { grid-template-columns: repeat(3, 1fr); } }
-  .card { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.5rem, 3vw, 2.25rem); border-radius: var(--radius-lg); position: relative; overflow: hidden; min-height: 26rem; }
-  .card--1 { background: var(--accent); }
-  .card--2 { background: var(--paper); border: 2px solid var(--ink); }
-  .card--3 { background: var(--ink); color: var(--ivory); }
-  .card-num { font-size: 4.5rem; font-weight: 800; letter-spacing: -0.06em; line-height: 0.8; opacity: 0.75; }
-  .card h3 { font-size: var(--step-2); }
-  .card p { line-height: 1.55; }
-  .card-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .card-tags li { font-size: 0.85rem; font-weight: 650; padding: 0.2rem 0.7rem; border: 1.5px solid currentColor; border-radius: 999px; }
-  .card-cta { margin-top: auto; align-self: flex-start; }
-  .card--3 .card-cta { --bg: var(--lime); --fg: var(--ink); }
-  .card--3 :focus-visible { box-shadow: 0 0 0 3px var(--ink), 0 0 0 6px var(--lime); }
+  .doors { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  @media (min-width: 900px) { .doors { grid-template-columns: 1fr 1fr; } }
+  .door { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.75rem, 4vw, 3rem); border-radius: var(--radius-lg); min-height: 24rem; }
+  .door--seek { background: var(--accent); }
+  .door--give { background: var(--ink); color: var(--ivory); }
+  .door--give :focus-visible { box-shadow: 0 0 0 3px var(--ink), 0 0 0 6px var(--lime); }
+  .door-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .door--give .door-label { color: var(--lime); }
+  .door h3 { font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em; font-weight: 800; }
+  .door > p:not(.door-label) { font-size: var(--step-1); line-height: 1.45; max-width: 32ch; }
+  .door ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .door li { font-size: 0.9rem; font-weight: 650; padding: 0.25rem 0.75rem; border: 1.5px solid currentColor; border-radius: 999px; }
+  .door .btn { margin-top: auto; align-self: flex-start; }
+
+  .types-title { margin-top: clamp(3rem, 6vw, 4.5rem); font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: var(--step-3); }
+  .types { list-style: none; padding: 0; margin: 1.75rem 0 0; display: grid; gap: 1rem; }
+  @media (min-width: 700px) { .types { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .types { grid-template-columns: repeat(5, 1fr); } }
+  .type { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius); padding: 1.4rem 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .type-n { font-weight: 800; color: var(--accent-ink); font-size: 0.9rem; }
+  .type h4 { font-size: var(--step-1); line-height: 1.15; letter-spacing: -0.015em; }
+  .type p { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.5; }
+  .type .link-arrow { margin-top: auto; align-self: flex-start; font-size: var(--step--1); }
+
+  .others { margin-top: 2rem; padding: 1.25rem 1.5rem; border: 2px dashed var(--line); border-radius: var(--radius); display: grid; gap: 0.75rem; }
+  @media (min-width: 900px) { .others { grid-template-columns: auto 1fr; align-items: center; gap: 2rem; } }
+  .others-title { font-weight: 700; }
+  .others ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; }
+  @media (min-width: 900px) { .others ul { grid-template-columns: 1fr 1fr; gap: 1.5rem; } }
+  .others li { display: grid; gap: 0.15rem; }
+  .others span { font-size: var(--step--1); color: var(--ink-soft); }
 </style>

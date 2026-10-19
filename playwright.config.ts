@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Deux serveurs : l'un « développement » (les envois sont écrits dans .data/),
-// l'autre « production sans configuration » (le site doit refuser honnêtement).
+// Serveurs de test : « développement » (envois écrits dans .data/), « production sans
+// configuration » (le site doit refuser honnêtement) et « production + Supabase » (faux Supabase).
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: false,
@@ -26,6 +26,18 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120_000,
       env: { NODE_ENV: 'production', FORM_WEBHOOK_URL: '', RESEND_API_KEY: '' },
+    },
+    {
+      command: 'node e2e/mock-supabase.mjs',
+      url: 'http://127.0.0.1:4340/__requests',
+      reuseExistingServer: false,
+    },
+    {
+      command: 'PORT=4332 HOST=127.0.0.1 node dist/server/entry.mjs',
+      url: 'http://127.0.0.1:4332/api/health',
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: { NODE_ENV: 'production', SUPABASE_URL: 'http://127.0.0.1:4340', SUPABASE_SECRET_KEY: 'test-secret' },
     },
   ],
 });

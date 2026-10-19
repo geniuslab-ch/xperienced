@@ -10,13 +10,13 @@ test('navigation : menu (mobile) ou liens (desktop) mènent aux sections', async
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toBeFocused();
     await toggle.click();
-    await page.locator('#menu').getByRole('link', { name: 'Entreprises' }).click();
+    await page.locator('#menu').getByRole('link', { name: 'Proposer un mandat' }).click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   } else {
-    await page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Entreprises' }).click();
+    await page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('link', { name: 'Proposer un mandat' }).click();
   }
-  await expect(page).toHaveURL(/#entreprises$/);
-  await expect(page.locator('#entreprises')).toBeInViewport();
+  await expect(page).toHaveURL(/#mandants$/);
+  await expect(page.locator('#mandants')).toBeInViewport();
 });
 
 test('le lien d’évitement permet d’aller directement au contenu', async ({ page, isMobile }) => {
