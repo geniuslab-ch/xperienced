@@ -14,7 +14,7 @@
 ## ⚙️ À configurer (avant de rendre public)
 
 - [ ] **Supabase** : exécuter `supabase/schema.sql` dans le SQL Editor ; ajouter `SUPABASE_SECRET_KEY` dans Vercel ; redéployer ; vérifier `/api/health` → `"supabase": true` ; tester chaque formulaire.
-- [ ] **Région Supabase** : la noter dans `supabaseRegion` (`src/config/site.ts`). Tant qu’elle manque, la politique de confidentialité affiche « [À confirmer] ».
+- [x] **Région Supabase** : eu-west-1 (Irlande, UE), indiquée dans la politique de confidentialité. Les données ne sont donc **pas** stockées en Suisse : si c’est indispensable, créer un nouveau projet Supabase en région Zurich (eu-central-2) avant le lancement.
 - [ ] **Notifications** (recommandé) : variables `SMTP_*` + `NOTIFY_EMAIL_TO` (messagerie Infomaniak).
 - [ ] **DPA** : accepter les accords de traitement des données de Supabase et de Vercel.
 - [ ] **Vercel** : branche de production, offre Hobby (usage non commercial) à confirmer ou passer à Pro.

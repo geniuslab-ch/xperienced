@@ -155,9 +155,10 @@ Mise en place (10 minutes) :
 
 1. **Créer les tables :** Supabase › *SQL Editor* › *New query*, collez le contenu de [`supabase/schema.sql`](supabase/schema.sql), puis *Run*.
 2. **Récupérer la clé secrète :** *Project Settings › API Keys* › clé **secrète** (`sb_secret_…`), ou l’ancienne clé `service_role`. ⚠️ Ne jamais la publier ni la coller dans le code : elle donne un accès complet à la base.
+   - La clé **publique** (`sb_publishable_…`) ne suffit pas : les tables refusent toute écriture qui n’est pas faite avec la clé secrète. Si vous ne pouvez vraiment pas utiliser la clé secrète, exécutez aussi [`supabase/policies-cle-publique.sql`](supabase/policies-cle-publique.sql) et mettez la clé publique dans `SUPABASE_SECRET_KEY` — moins sûr : lisez l’avertissement en tête du fichier.
 3. **Dans Vercel**, *Settings › Environment Variables* : `SUPABASE_SECRET_KEY` = cette clé (et `SUPABASE_URL` seulement si le projet change). Puis **Redeploy**.
 4. Vérifiez `https://VOTRE-SITE/api/health` : `"supabase": true`. Envoyez un formulaire de test de chaque type et vérifiez qu’il apparaît dans la table.
-5. **Région :** notez la région du projet (*Project Settings › General*) dans `supabaseRegion` (`src/config/site.ts`). Si c’est Zurich, le bas de page affichera « Données stockées en Suisse ».
+5. **Région :** le projet est en **eu-west-1 (Irlande, UE)**, comme l’indique la politique de confidentialité (`supabaseRegion` dans `src/config/site.ts`). Pour un stockage en Suisse, il faudrait un projet en région Zurich (eu-central-2) ; le bas de page afficherait alors « Données stockées en Suisse ».
 
 Sécurité : les tables ont la sécurité au niveau des lignes (RLS) activée **sans aucune règle publique**. Le navigateur n’a jamais accès à Supabase ; seul le serveur du site écrit, avec la clé secrète. La colonne `suivi` (« nouveau » par défaut) sert à suivre chaque demande à la main.
 

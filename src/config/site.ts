@@ -33,7 +33,7 @@ export const site = {
    * Tant que la valeur est `null`, la politique de confidentialité affiche « [À confirmer] »
    * et le bas de page n'annonce pas « Données stockées en Suisse ».
    */
-  supabaseRegion: null as string | null,
+  supabaseRegion: 'Europe de l’Ouest (Irlande, eu-west-1)' as string | null,
 
   /** Informations de don (IBAN, TWINT…). Laisser `null` tant qu'aucun compte n'existe : la mention n'apparaît alors pas. */
   donation: null as string | null,
