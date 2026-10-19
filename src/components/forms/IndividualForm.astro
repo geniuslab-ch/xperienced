@@ -1,0 +1,32 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import Choices from './Choices.astro';
+import { CANTONS, OTHER_LOCATIONS, OBJECTIFS, DISPONIBILITES, SOURCES } from '../../lib/forms';
+
+const id = 'form-individu';
+---
+<FormShell kind="individu" id={id}>
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="prenom" label="Votre prénom" required autocomplete="given-name" maxlength={60} />
+    <Field formId={id} name="region" label="Votre canton" type="select" required options={[...CANTONS, ...OTHER_LOCATIONS]} hint="Pour savoir où chercher, rien de plus." />
+  </div>
+
+  <Choices formId={id} name="contact_pref" legend="Comment préférez-vous être contacté·e ?" type="radio" required columns={2} options={{ email: 'Par e-mail', telephone: 'Par téléphone' }} checked={['email']} />
+
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="email" type="email" label="E-mail" required reqFor="email" autocomplete="email" maxlength={120} />
+    <Field formId={id} name="telephone" type="tel" label="Téléphone" reqFor="telephone" autocomplete="tel" maxlength={30} placeholder="079 123 45 67" />
+  </div>
+
+  <Choices formId={id} name="objectifs" legend="Qu’est-ce qui vous intéresse ?" hint="Plusieurs réponses possibles." required options={OBJECTIFS} />
+
+  <Field formId={id} name="competences" type="textarea" label="Votre expérience et vos envies, en quelques mots" required maxlength={800} rows={4}
+    hint="Métiers, compétences, passions, ce que vous aimeriez faire… Pas besoin de CV."
+    placeholder="Ex. 25 ans dans la logistique, j’aime organiser et former. J’aimerais un temps partiel ou transmettre à des jeunes." />
+
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="disponibilite" type="select" label="Votre disponibilité" options={DISPONIBILITES} emptyOption="Je ne sais pas encore" />
+    <Field formId={id} name="source" type="select" label="Comment avez-vous connu Xperienced ?" options={SOURCES} emptyOption="—" />
+  </div>
+</FormShell>

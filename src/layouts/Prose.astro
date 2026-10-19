@@ -1,0 +1,27 @@
+---
+import Page from './Page.astro';
+type Props = { title: string; description: string; heading: string; draft?: boolean };
+const { title, description, heading, draft = false } = Astro.props;
+---
+<Page title={title} description={description}>
+  <article class="section prose-page">
+    <div class="wrap prose">
+      <h1>{heading}</h1>
+      {draft && (
+        <p class="draft" role="note">
+          <strong>Document en cours de finalisation.</strong> Les éléments signalés « [À compléter] » doivent être renseignés et le texte relu par une personne compétente avant la mise en ligne publique.
+        </p>
+      )}
+      <slot />
+    </div>
+  </article>
+</Page>
+<style>
+  .prose { max-width: 46rem; }
+  .prose h1 { font-size: var(--step-4); margin-bottom: 2rem; }
+  .prose :global(h2) { font-size: var(--step-2); margin: 2.5rem 0 0.9rem; }
+  .prose :global(p), .prose :global(li) { color: var(--ink-soft); }
+  .prose :global(p + p) { margin-top: 0.9rem; }
+  .prose :global(ul) { padding-left: 1.25rem; display: grid; gap: 0.4rem; }
+  .draft { background: #fff4d6; border: 2px solid #c28a00; color: var(--ink) !important; border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 2rem; }
+</style>

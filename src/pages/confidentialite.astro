@@ -1,0 +1,61 @@
+---
+/**
+ * Politique de confidentialité — projet rédigé selon la loi fédérale sur la protection
+ * des données (LPD, en vigueur depuis le 1er septembre 2023), notamment le devoir
+ * d'informer (art. 19 LPD). À faire relire avant publication.
+ */
+import Prose from '../layouts/Prose.astro';
+import { site, orTodo } from '../config/site';
+const draft = !site.legalName || !site.contactEmail || !site.address;
+---
+<Prose title="Politique de confidentialité · Xperienced" description="Comment Xperienced traite vos données personnelles." heading="Politique de confidentialité" draft={draft}>
+  <p>Dernière mise à jour : [À compléter : date]</p>
+
+  <h2>1. Qui est responsable de vos données ?</h2>
+  <p>{orTodo(site.legalName, 'nom juridique de l’association')}, {orTodo(site.address, 'adresse du siège')}.</p>
+  <p>Contact pour toute question relative à vos données : {orTodo(site.privacyContact, 'personne ou fonction responsable')}, {site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : orTodo(null, 'e-mail de contact')}.</p>
+
+  <h2>2. Quelles données collectons-nous ?</h2>
+  <p>Uniquement ce que vous nous transmettez via nos formulaires, et seulement le nécessaire :</p>
+  <ul>
+    <li><strong>Inscription individuelle :</strong> prénom, moyen de contact préféré, e-mail et/ou téléphone, canton, ce que vous recherchez, quelques mots sur votre expérience et vos envies, et, si vous le souhaitez, votre disponibilité.</li>
+    <li><strong>Proposition d’opportunité :</strong> nom de l’organisation, personne de contact, coordonnées professionnelles, description de l’opportunité.</li>
+    <li><strong>Soutien :</strong> nom, e-mail, la manière dont vous souhaitez aider, votre message.</li>
+    <li><strong>Mur de l’expérience :</strong> votre phrase, la signature que vous choisissez et, si vous le souhaitez, votre e-mail.</li>
+    <li><strong>Informations techniques de provenance :</strong> la campagne ou l’affiche par laquelle vous êtes arrivé·e (paramètres de lien, sans identifiant personnel).</li>
+  </ul>
+  <p>Merci de ne pas nous transmettre d’informations sensibles (santé, opinions religieuses ou politiques, etc.) : elles ne sont pas nécessaires.</p>
+
+  <h2>3. Pourquoi les utilisons-nous ?</h2>
+  <ul>
+    <li>Vous recontacter et répondre à votre demande ;</li>
+    <li>rechercher des opportunités qui pourraient vous correspondre et, <strong>avec votre accord</strong>, vous mettre en relation avec une organisation ;</li>
+    <li>publier votre phrase sur le mur de l’expérience, uniquement si vous l’avez explicitement accepté ;</li>
+    <li>mesurer, de manière agrégée, quelles campagnes fonctionnent.</li>
+  </ul>
+  <p>Nous ne vendons pas vos données et ne les utilisons pas à des fins publicitaires.</p>
+
+  <h2>4. Qui y a accès ?</h2>
+  <p>Les membres de l’équipe Xperienced qui traitent les demandes. Nous recourons à des prestataires techniques qui traitent les données pour notre compte :</p>
+  <ul>
+    <li>Hébergement du site : [À compléter : ex. Render Services, Inc. (États-Unis), région d’hébergement choisie]</li>
+    <li>Réception des formulaires : [À compléter : ex. Google Sheets / Resend / autre outil effectivement configuré]</li>
+    <li>Mesure d’audience sans cookie : [À compléter : outil utilisé, ou « aucune »]</li>
+  </ul>
+  <p>Vos coordonnées ne sont jamais transmises à un employeur ou à une association sans votre accord préalable.</p>
+
+  <h2>5. Transferts à l’étranger</h2>
+  <p>[À compléter : indiquer les pays où les données peuvent être traitées par ces prestataires et les garanties prévues (par exemple pays reconnus par le Conseil fédéral comme offrant une protection adéquate, ou clauses contractuelles types). Privilégier si possible un hébergement en Suisse ou dans l’Union européenne.]</p>
+
+  <h2>6. Combien de temps les conservons-nous ?</h2>
+  <p>[À compléter : par exemple, 24 mois après le dernier contact, puis suppression.] Vous pouvez demander la suppression de vos données à tout moment.</p>
+
+  <h2>7. Vos droits</h2>
+  <p>Vous pouvez à tout moment demander l’accès à vos données, leur rectification ou leur suppression, vous opposer à leur traitement ou retirer votre consentement (par exemple pour la publication d’une phrase). Il suffit de nous écrire à l’adresse ci-dessus. Vous pouvez aussi vous adresser au Préposé fédéral à la protection des données et à la transparence (PFPDT).</p>
+
+  <h2>8. Cookies et mesure d’audience</h2>
+  <p>Ce site n’utilise pas de cookie publicitaire ni de traçage. Le cas échéant, la mesure d’audience est réalisée avec un outil sans cookie, qui produit des statistiques agrégées. Le site mémorise temporairement dans votre navigateur (jusqu’à la fermeture de l’onglet) la campagne par laquelle vous êtes arrivé·e.</p>
+
+  <h2>9. Sécurité</h2>
+  <p>Les échanges avec le site sont chiffrés (HTTPS). L’accès aux données reçues est limité aux personnes qui en ont besoin.</p>
+</Prose>

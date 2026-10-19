@@ -1,0 +1,40 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Un seul service web gratuit : pages pré-générées + petite API pour les formulaires et les QR codes.
+# Les secrets (sync: false) se saisissent dans le tableau de bord Render au premier déploiement.
+services:
+  - type: web
+    name: xperienced
+    runtime: node
+    plan: free
+    region: frankfurt
+    # Branche déployée. À remplacer par `main` une fois le travail fusionné.
+    branch: claude/wizardly-turing-zpjbc9
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: ASTRO_TELEMETRY_DISABLED
+        value: "1"
+      - key: SITE_URL            # ex. https://xperienced.onrender.com puis votre domaine
+        sync: false
+      - key: FORM_WEBHOOK_URL    # Google Apps Script / Make / n8n… (voir README)
+        sync: false
+      - key: FORM_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: NOTIFY_EMAIL_TO
+        sync: false
+      - key: NOTIFY_EMAIL_FROM
+        sync: false
+      - key: PUBLIC_PLAUSIBLE_DOMAIN
+        sync: false
+      - key: PUBLIC_UMAMI_WEBSITE_ID
+        sync: false

@@ -1,0 +1,62 @@
+---
+import { fr } from '../../content/fr';
+import type { FormKind } from '../../lib/forms';
+
+/**
+ * Enveloppe commune : champs cachés (type, anti-robots, campagne), consentement,
+ * messages d'état et modèle de confirmation.
+ */
+interface Props {
+  kind: FormKind;
+  id: string;
+  consentText?: string;
+  dark?: boolean;
+}
+const { kind, id, consentText = fr.forms.consent } = Astro.props;
+const t = fr.forms;
+---
+<div class="form-host">
+  <form
+    id={id}
+    class="form"
+    method="post"
+    action="/api/submit"
+    data-xp-form
+    data-kind={kind}
+    data-msg-invalid={t.errors.invalid}
+    data-msg-sending={t.sending}
+    data-msg-not_configured={t.errors.not_configured}
+    data-msg-delivery_failed={t.errors.delivery_failed}
+    data-msg-rate_limited={t.errors.rate_limited}
+    data-msg-network={t.errors.network}
+  >
+    <input type="hidden" name="kind" value={kind} />
+    <input type="hidden" name="ts" value="" />
+    <div class="hp" aria-hidden="true">
+      <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <slot />
+
+    <div class="consent">
+      <label class="choice">
+        <input type="checkbox" name="consent" value="oui" required data-msg-required="Votre accord est nécessaire pour que nous puissions traiter votre demande." aria-describedby={`${id}-consent-error`} />
+        <span>{consentText} <a href="/confidentialite" target="_blank" rel="noopener">{t.consentLink}</a> (s’ouvre dans un nouvel onglet).</span>
+      </label>
+      <p class="error" id={`${id}-consent-error`} data-error-for="consent" aria-live="polite"></p>
+    </div>
+
+    <p class="form-status" data-form-status role="alert"></p>
+
+    <div>
+      <button type="submit" class="btn btn--accent" data-track={`submit-${kind}`}>{t.submit[kind]} <span class="arrow" aria-hidden="true">→</span></button>
+    </div>
+  </form>
+  <template data-success>
+    <div class="form-success" role="status">
+      <span class="stamp">Reçu</span>
+      <h3>{t.success[kind].title}</h3>
+      <p>{t.success[kind].text}</p>
+    </div>
+  </template>
+</div>

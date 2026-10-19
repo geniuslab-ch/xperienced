@@ -1,0 +1,22 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site, orTodo } from '../config/site';
+const draft = !site.legalName || !site.contactEmail || !site.address;
+---
+<Prose title="Mentions légales · Xperienced" description="Informations légales sur l’association Xperienced." heading="Mentions légales" draft={draft}>
+  <h2>Éditeur du site</h2>
+  <p>{orTodo(site.legalName, 'nom juridique de l’association')}<br />{orTodo(site.address, 'adresse du siège')}<br />{site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : orTodo(null, 'e-mail de contact')}</p>
+  <p>Forme juridique : [À compléter : ex. association au sens des articles 60 ss du Code civil suisse]. Numéro IDE / inscription au registre du commerce : [À compléter, le cas échéant].</p>
+
+  <h2>Responsable du contenu</h2>
+  <p>[À compléter : nom ou fonction]</p>
+
+  <h2>Hébergement</h2>
+  <p>[À compléter : hébergeur effectivement utilisé et son adresse]</p>
+
+  <h2>Contenus et illustrations</h2>
+  <p>Les profils, CV et récits signalés comme « fictifs » ou « illustratifs » sont imaginés pour illustrer nos messages ; ils ne décrivent pas des personnes réelles. Les contributions au mur de l’expérience sont publiées avec l’accord explicite de leurs auteur·e·s.</p>
+
+  <h2>Responsabilité</h2>
+  <p>Xperienced met en relation des personnes et des organisations ; l’association ne garantit ni emploi, ni mission, ni activité. Les informations publiées sur ce site sont fournies avec soin mais sans garantie d’exhaustivité.</p>
+</Prose>

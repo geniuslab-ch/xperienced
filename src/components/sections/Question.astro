@@ -1,0 +1,51 @@
+---
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.question;
+---
+<section id="question" class="section section--dark" aria-labelledby="question-title">
+  <div class="wrap">
+    <p class="kicker">{t.kicker}</p>
+    <h2 id="question-title" class="title q-title" set:html={rich(t.title)} />
+
+    <div class="q-compare reveal">
+      <div class="q-col q-col--full">
+        <p class="q-label">{t.leftLabel}</p>
+        <ul>{t.left.map((l) => <li>{l}</li>)}</ul>
+      </div>
+      <div class="q-vs" aria-hidden="true">≠</div>
+      <div class="q-col q-col--empty">
+        <p class="q-label">{t.rightLabel}</p>
+        <p class="q-right">{t.right}</p>
+      </div>
+    </div>
+    <p class="q-note">{t.note}</p>
+
+    <div class="q-body reveal">
+      <div class="q-text">{t.body.map((p) => <p>{p}</p>)}</div>
+      <div class="q-closing">
+        <p>{t.closing}</p>
+        <a href="#rejoindre" class="btn btn--lime" data-track="question-mouvement">{t.cta} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .q-title { max-width: 16ch; }
+  .q-compare { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 4rem); align-items: stretch; }
+  @media (min-width: 860px) { .q-compare { grid-template-columns: 1fr auto 1fr; } }
+  .q-col { border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .q-col--full { background: var(--ivory); color: var(--ink); }
+  .q-col--full ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .q-col--full li { font-size: var(--step-1); font-weight: 650; line-height: 1.25; padding-left: 1.75rem; position: relative; }
+  .q-col--full li::before { content: '+'; position: absolute; left: 0; color: var(--accent-ink); font-weight: 800; }
+  .q-col--empty { border: 2px dashed rgba(245, 239, 227, 0.4); display: flex; flex-direction: column; }
+  .q-right { margin: auto 0; font-size: var(--step-4); font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: rgba(245, 239, 227, 0.55); text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 0.08em; padding-block: 1.5rem; }
+  .q-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1.1rem; opacity: 0.85; }
+  .q-vs { display: grid; place-items: center; font-size: var(--step-4); font-weight: 800; color: var(--accent); }
+  .q-note { margin-top: 0.9rem; font-size: 0.85rem; font-style: italic; opacity: 0.75; }
+  .q-body { display: grid; gap: 2.5rem; margin-top: clamp(3rem, 6vw, 5rem); }
+  @media (min-width: 900px) { .q-body { grid-template-columns: 1.1fr 0.9fr; gap: 5rem; } }
+  .q-text { display: grid; gap: 1.1rem; color: #d9d6e3; font-size: var(--step-1); line-height: 1.55; }
+  .q-closing p { font-family: var(--font-serif); font-style: italic; font-size: var(--step-3); line-height: 1.1; margin-bottom: 2rem; }
+</style>

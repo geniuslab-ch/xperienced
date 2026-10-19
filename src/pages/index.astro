@@ -1,0 +1,44 @@
+---
+import Page from '../layouts/Page.astro';
+import Hero from '../components/sections/Hero.astro';
+import Ticker from '../components/sections/Ticker.astro';
+import Question from '../components/sections/Question.astro';
+import Paths from '../components/sections/Paths.astro';
+import How from '../components/sections/How.astro';
+import Register from '../components/sections/Register.astro';
+import Employers from '../components/sections/Employers.astro';
+import Associations from '../components/sections/Associations.astro';
+import Wall from '../components/sections/Wall.astro';
+import Join from '../components/sections/Join.astro';
+import Faq from '../components/sections/Faq.astro';
+import Final from '../components/sections/Final.astro';
+import { fr } from '../content/fr';
+
+// Données structurées : uniquement des faits vérifiables (nom, URL, FAQ affichée sur la page).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', name: 'Xperienced', url: Astro.site?.toString(), inLanguage: 'fr-CH' },
+    {
+      '@type': 'FAQPage',
+      mainEntity: fr.faq.items
+        .filter((i) => !i.a.includes('[À compléter'))
+        .map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+    },
+  ],
+};
+---
+<Page title={fr.meta.title} description={fr.meta.description} ogImageAlt={fr.meta.ogImageAlt} jsonLd={jsonLd}>
+  <Hero />
+  <Ticker />
+  <Question />
+  <Paths />
+  <How />
+  <Register />
+  <Employers />
+  <Associations />
+  <Wall />
+  <Join />
+  <Faq />
+  <Final />
+</Page>

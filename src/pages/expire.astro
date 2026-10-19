@@ -1,0 +1,44 @@
+---
+/**
+ * Page de campagne « Le CV expiré » — destination du QR code de l'affiche principale (/q/cv).
+ */
+import Page from '../layouts/Page.astro';
+import ExpiredCv from '../components/ExpiredCv.astro';
+import Paths from '../components/sections/Paths.astro';
+import How from '../components/sections/How.astro';
+import Register from '../components/sections/Register.astro';
+import Final from '../components/sections/Final.astro';
+---
+<Page
+  title="EXPIRÉ ? Selon qui ? · Xperienced"
+  description="Votre expérience n’a pas de date de péremption. Découvrez ce qui reste possible après 50 ans : emploi, missions, bénévolat, transmission. Une initiative associative suisse."
+  ogImageAlt="Un CV tamponné « EXPIRÉ », le tampon barré."
+>
+  <section class="exp" aria-labelledby="exp-title">
+    <div class="wrap exp-grid">
+      <div>
+        <p class="kicker">Campagne · Le CV expiré</p>
+        <h1 id="exp-title" class="exp-title"><span class="exp-word">Expiré&#8239;?</span> Selon qui&#8239;?</h1>
+        <p class="lead exp-lead">Votre expérience n’a pas de date de péremption. Vous avez scanné l’affiche : c’est déjà un premier pas. Voici ce qui reste possible.</p>
+        <div class="exp-ctas">
+          <a href="#inscription" class="btn btn--accent" data-track="expire-inscription">Découvrir ce qui reste possible <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="/" class="link-arrow" data-track="expire-accueil">Qu’est-ce que Xperienced&#8239;?</a>
+        </div>
+      </div>
+      <ExpiredCv />
+    </div>
+  </section>
+  <Paths />
+  <How />
+  <Register />
+  <Final />
+</Page>
+<style>
+  .exp { padding-block: clamp(2.5rem, 6vw, 6rem); }
+  .exp-grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 980px) { .exp-grid { grid-template-columns: 1.2fr 0.8fr; } }
+  .exp-title { font-size: var(--step-5); line-height: 0.95; font-weight: 800; letter-spacing: -0.045em; }
+  .exp-word { display: inline-block; text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 0.09em; }
+  .exp-lead { margin-top: 1.75rem; }
+  .exp-ctas { display: flex; flex-wrap: wrap; gap: 1.1rem 1.75rem; align-items: center; margin-top: 2.25rem; }
+</style>

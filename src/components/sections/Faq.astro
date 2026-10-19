@@ -1,0 +1,37 @@
+---
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.faq;
+---
+<section id="faq" class="section section--sand" aria-labelledby="faq-title">
+  <div class="wrap faq">
+    <div>
+      <p class="kicker">{t.kicker}</p>
+      <h2 id="faq-title" class="title" set:html={rich(t.title)} />
+    </div>
+    <div class="faq-list">
+      {t.items.map((item) => (
+        <details>
+          <summary><h3>{item.q}</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .faq { display: grid; gap: 2.5rem; }
+  @media (min-width: 1000px) { .faq { grid-template-columns: 0.8fr 1.2fr; gap: 5rem; align-items: start; } }
+  .faq-list { border-top: 2px solid var(--ink); }
+  details { border-bottom: 2px solid var(--ink); }
+  summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.35rem 0.25rem; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { font-size: var(--step-1); line-height: 1.25; letter-spacing: -0.01em; }
+  summary:hover h3 { color: var(--accent-ink); }
+  .faq-icon { flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 2px solid var(--ink); position: relative; transition: background-color 0.2s ease, transform 0.25s ease; }
+  .faq-icon::before, .faq-icon::after { content: ''; position: absolute; left: 50%; top: 50%; width: 0.85rem; height: 2px; background: var(--ink); transform: translate(-50%, -50%); }
+  .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform 0.25s ease; }
+  details[open] .faq-icon { background: var(--accent); }
+  details[open] .faq-icon::after { transform: translate(-50%, -50%) rotate(0deg); }
+  details p { padding: 0 0.25rem 1.5rem; max-width: 62ch; color: var(--ink-soft); }
+</style>

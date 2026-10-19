@@ -1,0 +1,57 @@
+---
+import OpportunityForm from '../forms/OpportunityForm.astro';
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.employers;
+---
+<section id="entreprises" class="section section--dark" aria-labelledby="employers-title">
+  <div class="wrap">
+    <p class="kicker">{t.kicker}</p>
+    <h2 id="employers-title" class="title emp-title" set:html={rich(t.title)} />
+    <p class="lead emp-lead">{t.lead}</p>
+
+    <ul class="benefits">
+      {t.benefits.map((b, i) => (
+        <li class="benefit reveal">
+          <span class="benefit-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{b.title}</h3>
+          <p>{b.text}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="emp-examples reveal">
+      <h3>{t.exampleTitle}</h3>
+      <ul>{t.examples.map((e) => <li>{e}</li>)}</ul>
+    </div>
+
+    <div id="proposer" class="emp-form">
+      <div class="emp-form-intro">
+        <h3>{t.formTitle}</h3>
+        <p>{t.formLead}</p>
+      </div>
+      <OpportunityForm />
+    </div>
+  </div>
+</section>
+<style>
+  .emp-title { max-width: 20ch; }
+  .emp-lead { margin-top: 1.5rem; }
+  .benefits { list-style: none; padding: 0; margin: clamp(2.5rem, 5vw, 4rem) 0 0; display: grid; gap: 1px; background: rgba(245, 239, 227, 0.18); border-radius: var(--radius-lg); overflow: hidden; }
+  @media (min-width: 700px) { .benefits { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .benefits { grid-template-columns: repeat(5, 1fr); } }
+  .benefit { background: var(--ink); padding: 1.75rem 1.5rem; }
+  .benefit-n { color: var(--lime); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.1em; }
+  .benefit h3 { font-size: var(--step-1); margin: 0.75rem 0 0.5rem; line-height: 1.15; }
+  .benefit p { color: #c9c6d6; font-size: var(--step--1); line-height: 1.5; }
+  .emp-examples { margin-top: 2.5rem; display: grid; gap: 1rem; }
+  @media (min-width: 900px) { .emp-examples { grid-template-columns: 0.4fr 1fr; align-items: start; } }
+  .emp-examples h3 { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: var(--step-2); color: var(--lime); }
+  .emp-examples ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .emp-examples li { border: 1.5px solid rgba(245, 239, 227, 0.5); border-radius: 999px; padding: 0.45rem 1rem; font-size: var(--step--1); }
+  .emp-form { margin-top: clamp(3rem, 6vw, 5rem); background: var(--paper); color: var(--ink); border-radius: var(--radius-lg); padding: clamp(1.25rem, 4vw, 3rem); display: grid; gap: 2rem; }
+  @media (min-width: 1000px) { .emp-form { grid-template-columns: 0.7fr 1.3fr; gap: 4rem; } }
+  .emp-form-intro h3 { font-size: var(--step-3); margin-bottom: 1rem; }
+  .emp-form-intro p { color: var(--ink-soft); }
+  .emp-form :focus-visible { box-shadow: var(--focus); }
+</style>

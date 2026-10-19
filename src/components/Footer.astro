@@ -1,0 +1,72 @@
+---
+import Logo from './Logo.astro';
+import { fr } from '../content/fr';
+import { site, orTodo } from '../config/site';
+const t = fr.footer;
+const socials = Object.entries(site.social).filter(([, url]) => url) as [string, string][];
+const socialNames: Record<string, string> = { instagram: 'Instagram', linkedin: 'LinkedIn', facebook: 'Facebook', tiktok: 'TikTok' };
+---
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <Logo tone="ivory" />
+      <p class="foot-tagline">{t.tagline}</p>
+    </div>
+
+    <div>
+      <h2 class="foot-h">Contact</h2>
+      <p>{orTodo(site.legalName, 'nom juridique de l’association')}</p>
+      <p>{orTodo(site.address, 'adresse du siège')}</p>
+      <p>{site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : orTodo(null, 'e-mail de contact')}</p>
+      {site.donation && <p class="foot-don">Dons : {site.donation}</p>}
+    </div>
+
+    <div>
+      <h2 class="foot-h">Informations</h2>
+      <ul class="foot-links">
+        <li><a href="/confidentialite">{t.privacy}</a></li>
+        <li><a href="/mentions-legales">{t.legal}</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+        <li><a href="/#soutenir">Soutenir Xperienced</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="foot-h">Suivre le mouvement</h2>
+      {socials.length ? (
+        <ul class="foot-links">{socials.map(([k, url]) => <li><a href={url} rel="noopener" target="_blank">{socialNames[k]}</a></li>)}</ul>
+      ) : (
+        <p>{orTodo(null, 'liens réseaux sociaux')}</p>
+      )}
+      <h2 class="foot-h foot-h--lang">{t.languages}</h2>
+      <ul class="foot-lang">
+        {site.languages.map((l) =>
+          l.ready ? (
+            <li><a href={l.code === 'fr' ? '/' : `/${l.code}/`} lang={l.code} aria-current={l.code === 'fr' ? 'true' : undefined}>{l.label}<span class="sr-only"> {l.name}</span></a></li>
+          ) : (
+            <li><span lang={l.code} title={`${l.name} : ${t.soon}`}>{l.label}<span class="sr-only"> {l.name} ({t.soon})</span></span></li>
+          ),
+        )}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <p>© {new Date().getFullYear()} {site.legalName ?? site.name}</p>
+  </div>
+</footer>
+<style>
+  .site-footer { background: #0a0f24; color: #d9d6e3; padding-block: 4rem 2rem; font-size: var(--step--1); }
+  .site-footer a { color: var(--ivory); }
+  .site-footer :focus-visible { box-shadow: 0 0 0 3px #0a0f24, 0 0 0 6px var(--lime); }
+  .foot-grid { display: grid; gap: 2.5rem; }
+  @media (min-width: 760px) { .foot-grid { grid-template-columns: 1.3fr 1fr 1fr 1fr; } }
+  .foot-tagline { margin-top: 1.25rem; font-family: var(--font-serif); font-style: italic; font-size: var(--step-1); color: var(--ivory); max-width: 18ch; line-height: 1.2; }
+  .foot-h { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.9rem; font-weight: 700; }
+  .foot-h--lang { margin-top: 1.75rem; }
+  .foot-links, .foot-lang { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.45rem; }
+  .foot-lang { display: flex; gap: 0.5rem; }
+  .foot-lang a, .foot-lang span[title] { display: inline-grid; place-items: center; min-width: 2.75rem; min-height: 2.75rem; border-radius: 8px; border: 1.5px solid rgba(245, 239, 227, 0.35); font-weight: 700; text-decoration: none; }
+  .foot-lang a[aria-current] { background: var(--ivory); color: var(--ink); }
+  .foot-lang span[title] { opacity: 0.6; }
+  .foot-bottom { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid rgba(245, 239, 227, 0.15); opacity: 0.8; }
+</style>

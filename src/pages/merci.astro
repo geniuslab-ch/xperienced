@@ -1,0 +1,41 @@
+---
+/** Page de retour pour les envois sans JavaScript. Le contenu dépend du paramètre d'URL. */
+import Page from '../layouts/Page.astro';
+import { fr } from '../content/fr';
+const t = fr.forms;
+---
+<Page title="Merci · Xperienced" description="Confirmation d’envoi." noindex>
+  <section class="section">
+    <div class="wrap merci">
+      <div id="merci-ok" class="form-success">
+        <span class="stamp">Reçu</span>
+        <h1 class="merci-title">Merci, c’est noté.</h1>
+        <p>Votre envoi nous est bien parvenu. Nous reprendrons contact avec vous.</p>
+      </div>
+      <div id="merci-ko" class="form-status" data-tone="error" hidden>
+        <h1 class="merci-title">Votre demande n’a pas été envoyée.</h1>
+        <p id="merci-ko-text">{t.errors.delivery_failed}</p>
+      </div>
+      <p><a class="link-arrow" href="/">Retour à l’accueil</a></p>
+    </div>
+  </section>
+  <script is:inline define:vars={{ errors: t.errors, success: t.success }}>
+    const p = new URLSearchParams(location.search);
+    const etat = p.get('etat');
+    const map = { inactif: 'not_configured', erreur: 'delivery_failed', limite: 'rate_limited', incomplet: 'invalid' };
+    if (etat && map[etat]) {
+      document.getElementById('merci-ok').hidden = true;
+      document.getElementById('merci-ko').hidden = false;
+      document.getElementById('merci-ko-text').textContent =
+        etat === 'incomplet' ? 'Certains champs obligatoires sont manquants ou invalides. Revenez en arrière pour les compléter.' : errors[map[etat]];
+    } else if (success[p.get('type')]) {
+      const s = success[p.get('type')];
+      document.querySelector('#merci-ok h1').textContent = s.title;
+      document.querySelector('#merci-ok p').textContent = s.text;
+    }
+  </script>
+</Page>
+<style>
+  .merci { display: grid; gap: 2rem; max-width: 48rem; }
+  .merci-title { font-size: var(--step-3); margin-bottom: 0.75rem; }
+</style>

@@ -1,0 +1,62 @@
+---
+import WallForm from '../forms/WallForm.astro';
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+import { quotes } from '../../content/wall';
+const t = fr.wall;
+---
+<section id="mur" class="section section--paper" aria-labelledby="wall-title">
+  <div class="wrap">
+    <p class="kicker">{t.kicker}</p>
+    <h2 id="wall-title" class="title" set:html={rich(t.title)} />
+    <p class="lead wall-lead">{t.lead}</p>
+
+    <p class="wall-question reveal">« {t.question} »</p>
+
+    {quotes.length > 0 ? (
+      <ul class="wall-quotes" aria-label="Phrases publiées avec l’accord de leurs auteur·e·s">
+        {quotes.map((q) => <li><blockquote><p>{q.text}</p></blockquote>{q.signature && <p class="wall-sig">— {q.signature}</p>}</li>)}
+      </ul>
+    ) : (
+      <div class="wall-examples">
+        <p class="wall-ex-label">{t.examplesLabel}</p>
+        <ul>{t.examples.map((e) => <li>{e}</li>)}</ul>
+      </div>
+    )}
+
+    <div class="wall-grid">
+      <article class="scenario reveal" aria-labelledby="scenario-title">
+        <p class="scenario-label">{t.scenarioLabel}</p>
+        <h3 id="scenario-title">{t.scenario.name}</h3>
+        <p>{t.scenario.text}</p>
+        <p class="scenario-note">{t.scenario.note}</p>
+      </article>
+      <div class="wall-form">
+        <h3>{t.formTitle}</h3>
+        <p class="wall-form-lead">{t.formLead}</p>
+        <WallForm />
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .wall-lead { margin-top: 1.5rem; max-width: 52ch; }
+  .wall-question { margin-top: clamp(2.5rem, 5vw, 4rem); font-family: var(--font-serif); font-style: italic; font-size: var(--step-4); line-height: 1.05; max-width: 22ch; }
+  .wall-examples { margin-top: 2rem; }
+  .wall-ex-label { font-size: 0.85rem; font-style: italic; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .wall-examples ul, .wall-quotes { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .wall-examples li, .wall-quotes li { background: #fff; border: 2px dashed var(--line); border-radius: 12px; padding: 0.9rem 1.2rem; font-weight: 600; max-width: 26rem; }
+  .wall-quotes li { border-style: solid; border-color: var(--ink); }
+  .wall-quotes blockquote { margin: 0; }
+  .wall-sig { font-size: var(--step--1); color: var(--ink-soft); margin-top: 0.4rem; font-weight: 500; }
+  .wall-grid { display: grid; gap: 2rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+  @media (min-width: 1000px) { .wall-grid { grid-template-columns: 0.85fr 1.15fr; gap: 3rem; align-items: start; } }
+  .scenario { background: var(--sand); border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.5rem); position: relative; }
+  .scenario-label { display: inline-block; background: var(--ink); color: var(--ivory); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.35rem 0.75rem; border-radius: 6px; margin-bottom: 1.25rem; }
+  .scenario h3 { font-size: var(--step-2); margin-bottom: 1rem; }
+  .scenario p { line-height: 1.6; }
+  .scenario-note { margin-top: 1.25rem; font-size: var(--step--1); font-style: italic; color: var(--ink-soft); }
+  .wall-form { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(1.25rem, 4vw, 2.5rem); box-shadow: var(--shadow); }
+  .wall-form h3 { font-size: var(--step-2); }
+  .wall-form-lead { color: var(--ink-soft); margin: 0.5rem 0 1.5rem; }
+</style>

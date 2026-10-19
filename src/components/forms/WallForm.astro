@@ -1,0 +1,20 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+
+const id = 'form-mur';
+---
+<FormShell kind="mur" id={id} consentText="J’accepte que Xperienced traite ces informations pour gérer ma contribution, conformément à la">
+  <Field formId={id} name="phrase" type="textarea" label="Ce que l’expérience m’a appris" required maxlength={280} rows={3} placeholder="Une phrase, un conseil, une leçon…" />
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="signature" label="Signature affichée" maxlength={80} hint="Ex. « Marianne, 61 ans, Vevey » ou simplement des initiales. Laissez vide pour rester anonyme." />
+    <Field formId={id} name="email" type="email" label="E-mail" maxlength={120} hint="Seulement si vous acceptez que nous vous recontactions à propos de votre phrase." autocomplete="email" />
+  </div>
+  <div>
+    <label class="choice">
+      <input type="checkbox" name="publication" value="oui" required data-msg-required="Sans votre accord, nous ne pouvons pas publier votre phrase." aria-describedby="form-mur-publication-error" />
+      <span>J’accepte que ma phrase (et la signature indiquée) soit publiée sur le site et les réseaux de Xperienced, après relecture. Je peux retirer mon accord à tout moment.</span>
+    </label>
+    <p class="error" id="form-mur-publication-error" data-error-for="publication" aria-live="polite"></p>
+  </div>
+</FormShell>

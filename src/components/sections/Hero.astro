@@ -1,0 +1,41 @@
+---
+import ExpiredCv from '../ExpiredCv.astro';
+import { fr } from '../../content/fr';
+const t = fr.hero;
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker">{t.eyebrow}</p>
+      <h1 id="hero-title" class="hero-title">
+        {t.titleBefore} <span class="hero-accent">{t.titleAccent}<svg viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path d="M3 15 C 60 4, 140 4, 297 13" /></svg></span>.
+      </h1>
+      <p class="lead hero-lead">{t.lead}</p>
+      <div class="hero-ctas">
+        <a href="#inscription" class="btn btn--accent" data-track="hero-primary">{t.primary} <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="#entreprises" class="link-arrow" data-track="hero-secondary">{t.secondary}</a>
+      </div>
+      <p class="hero-micro">{t.micro}</p>
+    </div>
+    <div class="hero-visual">
+      <ExpiredCv label={t.cardLabel} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(2.5rem, 1rem + 6vw, 6rem) clamp(3.5rem, 2rem + 6vw, 7rem); overflow: hidden; }
+  .hero-grid { display: grid; gap: clamp(3rem, 6vw, 5rem); align-items: center; }
+  @media (min-width: 980px) { .hero-grid { grid-template-columns: 1.25fr 0.85fr; } }
+  .hero-title { font-size: var(--step-5); line-height: 0.95; letter-spacing: -0.045em; font-weight: 800; max-width: 13ch; }
+  .hero-accent { position: relative; display: inline-block; font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; color: var(--accent-ink); }
+  .hero-accent svg { position: absolute; left: 0; right: 0; bottom: -0.08em; width: 100%; height: 0.25em; overflow: visible; }
+  .hero-accent path { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 320; stroke-dashoffset: 320; animation: underline 0.9s 0.3s cubic-bezier(0.6, 0, 0.3, 1) forwards; }
+  @keyframes underline { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .hero-accent path { animation: none; stroke-dashoffset: 0; } }
+  .hero-lead { margin-top: 1.75rem; max-width: 34ch; }
+  .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.1rem 1.75rem; margin-top: 2.25rem; }
+  .hero-micro { margin-top: 1.1rem; color: var(--ink-soft); font-size: var(--step--1); }
+  .hero-visual { max-width: 30rem; width: 100%; justify-self: center; }
+  @media (max-width: 979px) { .hero-visual { max-width: 26rem; } }
+</style>

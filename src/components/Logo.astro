@@ -1,0 +1,18 @@
+---
+/** Logotype : le X est un tampon, l'expérience « validée ». */
+interface Props { tone?: 'ink' | 'ivory' | 'on-accent' }
+const { tone = 'ink' } = Astro.props;
+---
+<span class:list={['logo', `logo--${tone}`]}>
+  <span class="logo-x" aria-hidden="true">X</span><span class="logo-rest">perienced</span>
+</span>
+<style>
+  .logo { display: inline-flex; align-items: center; font-weight: 800; font-size: 1.45rem; letter-spacing: -0.04em; line-height: 1; }
+  .logo-x {
+    display: inline-grid; place-items: center; width: 1.55em; height: 1.55em; margin-right: 0.08em;
+    background: var(--accent); color: var(--ink); border-radius: 0.3em; transform: rotate(-8deg);
+    font-size: 0.95em;
+  }
+  .logo--ivory { color: var(--ivory); }
+  .logo--on-accent .logo-x { background: var(--ink); color: var(--accent); }
+</style>

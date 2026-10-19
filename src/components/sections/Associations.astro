@@ -1,0 +1,32 @@
+---
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.associations;
+---
+<section id="associations" class="section section--accent" aria-labelledby="assoc-title">
+  <div class="wrap assoc">
+    <div>
+      <p class="kicker">{t.kicker}</p>
+      <h2 id="assoc-title" class="title" set:html={rich(t.title)} />
+    </div>
+    <div class="assoc-body">
+      <p class="assoc-lead">{t.lead}</p>
+      <ul class="assoc-items">{t.items.map((i) => <li>{i}</li>)}</ul>
+      <div class="assoc-ctas">
+        <a href="#proposer" class="btn" data-track="assoc-partenaire" data-preset="form-opportunite:type_org:association|form-opportunite:type_opportunite:partenariat">{t.cta} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <p class="assoc-support">{t.support} <a href="#soutenir" class="link-arrow" data-track="assoc-soutenir">{t.supportCta}</a></p>
+    </div>
+  </div>
+</section>
+<style>
+  .assoc { display: grid; gap: 2.5rem; }
+  @media (min-width: 980px) { .assoc { grid-template-columns: 1.1fr 0.9fr; gap: 5rem; align-items: end; } }
+  .assoc .title { max-width: 16ch; }
+  .assoc .kicker { color: var(--ink); }
+  .assoc-lead { font-size: var(--step-1); line-height: 1.5; }
+  .assoc-items { list-style: none; padding: 0; margin: 1.75rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .assoc-items li { background: var(--ink); color: var(--ivory); border-radius: 999px; padding: 0.4rem 1rem; font-weight: 600; font-size: var(--step--1); }
+  .assoc-support { margin-top: 1.75rem; font-weight: 550; }
+  .assoc-support .link-arrow:hover { color: var(--ink); }
+</style>

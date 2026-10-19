@@ -1,0 +1,54 @@
+/**
+ * Informations sur l'association.
+ *
+ * ⚠️ Tout ce qui vaut `null` est encore inconnu : le site affiche alors un
+ * texte « [À compléter] » bien visible plutôt que d'inventer une information.
+ * Remplacez `null` par la vraie valeur entre guillemets, par exemple :
+ *   contactEmail: 'bonjour@xperienced.ch',
+ */
+export const site = {
+  name: 'Xperienced',
+
+  /** Nom juridique exact (ex. « Association Xperienced »), tel qu'inscrit dans les statuts. */
+  legalName: null as string | null,
+
+  /** Adresse postale du siège (rue, NPA, localité). */
+  address: null as string | null,
+
+  /** Adresse e-mail de contact publique. */
+  contactEmail: null as string | null,
+
+  /** Personne responsable du traitement des données (nom ou fonction), pour la politique de confidentialité. */
+  privacyContact: null as string | null,
+
+  /**
+   * Région(s) où Xperienced est réellement active. Ne mentionnez que des
+   * régions où vous pouvez effectivement accompagner des personnes.
+   */
+  activeRegion: null as string | null,
+
+  /** Informations de don (IBAN, TWINT…). Laisser `null` tant qu'aucun compte n'existe : la mention n'apparaît alors pas. */
+  donation: null as string | null,
+
+  /** Réseaux sociaux : ne renseigner que les comptes existants. Les autres ne s'affichent pas. */
+  social: {
+    instagram: null as string | null,
+    linkedin: null as string | null,
+    facebook: null as string | null,
+    tiktok: null as string | null,
+  },
+
+  /** Langues prévues. `ready: false` = affichée comme « bientôt », sans lien. */
+  languages: <{ code: string; label: string; name: string; ready: boolean }[]>[
+    { code: 'fr', label: 'FR', name: 'Français', ready: true },
+    { code: 'de', label: 'DE', name: 'Deutsch', ready: false },
+    { code: 'it', label: 'IT', name: 'Italiano', ready: false },
+  ],
+} as const;
+
+export const TODO = '[À compléter]';
+
+/** Renvoie la valeur ou le marqueur « [À compléter] ». */
+export function orTodo(value: string | null | undefined, label?: string): string {
+  return value ?? (label ? `[À compléter : ${label}]` : TODO);
+}

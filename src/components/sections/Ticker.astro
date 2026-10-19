@@ -1,0 +1,23 @@
+---
+import { fr } from '../../content/fr';
+const lines = fr.ticker;
+---
+<div class="ticker" role="region" aria-label="Nos messages">
+  <ul class="ticker-track">
+    {lines.map((l) => <li>{l}</li>)}
+    {lines.map((l) => <li aria-hidden="true">{l}</li>)}
+  </ul>
+</div>
+<style>
+  .ticker { background: var(--ink); color: var(--ivory); overflow: hidden; border-block: 3px solid var(--accent); }
+  .ticker-track { list-style: none; margin: 0; padding: 1.1rem 0; display: flex; width: max-content; animation: scroll 60s linear infinite; }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker li { font-size: var(--step-1); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; padding-inline: 1.5rem; display: flex; align-items: center; gap: 3rem; }
+  .ticker li::after { content: '✕'; color: var(--accent); font-size: 0.8em; margin-left: 1.5rem; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; padding-inline: var(--gutter); }
+    .ticker li[aria-hidden='true'] { display: none; }
+    .ticker li { white-space: normal; }
+  }
+</style>

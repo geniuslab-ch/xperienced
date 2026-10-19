@@ -1,0 +1,56 @@
+---
+/** Champ de formulaire accessible : libellé, aide, message d'erreur reliés au champ. */
+interface Props {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+  required?: boolean;
+  hint?: string;
+  placeholder?: string;
+  autocomplete?: string;
+  maxlength?: number;
+  options?: Record<string, string> | string[];
+  emptyOption?: string;
+  /** Texte affiché à la place de « (obligatoire)/(facultatif) » et piloté par le script (contact). */
+  reqFor?: string;
+  rows?: number;
+  formId: string;
+  msgRequired?: string;
+}
+const { name, label, type = 'text', required = false, hint, placeholder, autocomplete, maxlength, options, emptyOption = 'Choisir…', reqFor, rows = 4, formId, msgRequired } = Astro.props;
+const id = `${formId}-${name}`;
+const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ');
+const entries = Array.isArray(options) ? options.map((o) => [o, o]) : Object.entries(options || {});
+---
+<div class="field">
+  <label for={id}>
+    {label}
+    {reqFor ? <span class="req" data-req-for={reqFor}>{required ? '(obligatoire)' : '(facultatif)'}</span> : required ? <span class="req">(obligatoire)</span> : <span class="opt">(facultatif)</span>}
+  </label>
+  {hint && <p class="hint" id={`${id}-hint`}>{hint}</p>}
+  {type === 'textarea' ? (
+    <textarea id={id} name={name} required={required} placeholder={placeholder} maxlength={maxlength} rows={rows} aria-describedby={describedBy} data-msg-required={msgRequired} />
+  ) : type === 'select' ? (
+    <select id={id} name={name} required={required} aria-describedby={describedBy} autocomplete={autocomplete} data-msg-required={msgRequired || 'Veuillez choisir une option.'}>
+      <option value="">{emptyOption}</option>
+      {entries.map(([value, text]) => <option value={value}>{text}</option>)}
+      <slot name="extra-options" />
+    </select>
+  ) : (
+    <input
+      id={id}
+      name={name}
+      type={type}
+      required={required}
+      placeholder={placeholder}
+      autocomplete={autocomplete}
+      maxlength={maxlength}
+      inputmode={type === 'tel' ? 'tel' : type === 'email' ? 'email' : undefined}
+      pattern={type === 'tel' ? '[+()0-9 ./\\-]{8,24}' : undefined}
+      aria-describedby={describedBy}
+      data-msg-required={msgRequired}
+      data-msg-format={type === 'email' ? 'Cette adresse e-mail ne semble pas valide (ex. prenom@exemple.ch).' : type === 'tel' ? 'Ce numéro ne semble pas valide (ex. 079 123 45 67).' : undefined}
+    />
+  )}
+  <p class="error" id={`${id}-error`} data-error-for={name} aria-live="polite"></p>
+</div>

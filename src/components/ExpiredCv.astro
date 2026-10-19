@@ -1,0 +1,78 @@
+---
+/**
+ * Visuel de campagne « Le CV expiré » : un CV tamponné EXPIRÉ, tampon barré,
+ * recouvert par EXPÉRIMENTÉ. Construit en HTML/CSS (net à toutes les tailles,
+ * aucun poids d'image). Profil entièrement fictif.
+ */
+interface Props { label?: string; compact?: boolean }
+const { label = 'Profil fictif, à titre d’illustration', compact = false } = Astro.props;
+---
+<figure class:list={['cv', compact && 'cv--compact']} aria-label="Illustration : un CV tamponné « Expiré », le tampon est barré et remplacé par « Expérimenté ».">
+  <div class="cv-sheet" aria-hidden="true">
+    <div class="cv-head">
+      <div class="cv-avatar">CR</div>
+      <div>
+        <p class="cv-name">Christine R.</p>
+        <p class="cv-role">Responsable logistique · 58 ans</p>
+      </div>
+    </div>
+    <p class="cv-h">Expérience</p>
+    <ul class="cv-list">
+      <li><span>2009 – 2024</span> Cheffe d’entrepôt, 22 personnes</li>
+      <li><span>1998 – 2009</span> Planification &amp; achats</li>
+      <li><span>1989 – 1998</span> Apprentissage puis employée de commerce</li>
+    </ul>
+    <p class="cv-h">Compétences</p>
+    <div class="cv-tags"><span>Gestion d’équipe</span><span>SAP</span><span>Formation d’apprentis</span><span>FR · DE · EN</span><span>Sang-froid</span></div>
+    <div class="cv-lines"><i></i><i></i><i></i></div>
+
+    <div class="cv-expired">
+      <span class="stamp">Expiré</span>
+      <svg class="cv-strike" viewBox="0 0 220 80" preserveAspectRatio="none"><path d="M6 60 C 60 48, 120 30, 214 14" /><path d="M10 22 C 70 34, 140 50, 210 66" /></svg>
+    </div>
+    <span class="stamp cv-new">Expérimentée</span>
+  </div>
+  <figcaption>{label}</figcaption>
+</figure>
+
+<style>
+  .cv { margin: 0; position: relative; }
+  .cv-sheet {
+    position: relative; background: #fffdf8; color: var(--ink); border-radius: 6px;
+    padding: clamp(1.25rem, 3vw, 2rem); box-shadow: 0 30px 60px -30px rgba(15, 22, 49, 0.55), 0 2px 0 rgba(15, 22, 49, 0.06);
+    transform: rotate(2.5deg); font-size: 0.92rem; line-height: 1.45; overflow: hidden;
+    border: 1px solid #e6dccb;
+  }
+  .cv-head { display: flex; gap: 0.9rem; align-items: center; padding-bottom: 1rem; border-bottom: 2px solid var(--ink); margin-bottom: 1rem; }
+  .cv-avatar { width: 3.2rem; height: 3.2rem; border-radius: 50%; background: var(--sand); display: grid; place-items: center; font-weight: 800; }
+  .cv-name { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; }
+  .cv-role { color: var(--ink-soft); }
+  .cv-h { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin: 0.9rem 0 0.45rem; color: var(--ink-soft); }
+  .cv-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.35rem; }
+  .cv-list span { display: inline-block; min-width: 6.6rem; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .cv-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .cv-tags span { border: 1.5px solid var(--ink); border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.8rem; font-weight: 600; }
+  .cv-lines { display: grid; gap: 0.45rem; margin-top: 1rem; }
+  .cv-lines i { display: block; height: 0.5rem; background: #ece4d4; border-radius: 4px; }
+  .cv-lines i:nth-child(2) { width: 82%; }
+  .cv-lines i:nth-child(3) { width: 64%; }
+
+  .cv-expired { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); color: #8b8b95; }
+  .cv-expired .stamp { font-size: clamp(2rem, 6vw, 3.4rem); opacity: 0.7; mix-blend-mode: multiply; }
+  .cv-strike { position: absolute; inset: -10% -8%; width: 116%; height: 120%; overflow: visible; }
+  .cv-strike path { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 260; stroke-dashoffset: 260; animation: strike 0.6s 0.6s cubic-bezier(0.6, 0, 0.3, 1) forwards; }
+  .cv-strike path:nth-child(2) { animation-delay: 0.95s; }
+  .cv-new {
+    position: absolute; right: 6%; bottom: 14%; color: var(--accent); background: rgba(255, 253, 248, 0.85);
+    font-size: clamp(1.2rem, 3.4vw, 1.9rem); transform: rotate(-10deg) scale(0.6); opacity: 0;
+    animation: stampIn 0.35s 1.45s cubic-bezier(0.3, 1.6, 0.5, 1) forwards;
+  }
+  figcaption { margin-top: 1.4rem; font-size: 0.85rem; color: var(--ink-soft); text-align: right; font-style: italic; }
+  .cv--compact .cv-sheet { font-size: 0.85rem; }
+  @keyframes strike { to { stroke-dashoffset: 0; } }
+  @keyframes stampIn { to { opacity: 1; transform: rotate(-10deg) scale(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .cv-strike path { stroke-dashoffset: 0; animation: none; }
+    .cv-new { opacity: 1; transform: rotate(-10deg); animation: none; }
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import IndividualForm from '../forms/IndividualForm.astro';
+import { fr } from '../../content/fr';
+const t = fr.forms;
+---
+<section id="inscription" class="section" aria-labelledby="register-title">
+  <div class="wrap register">
+    <div class="register-intro">
+      <p class="kicker">Inscription · personnes 50+</p>
+      <h2 id="register-title" class="title">{t.individuTitle}</h2>
+      <p class="lead">{t.individuLead}</p>
+      <ul class="register-promises">
+        <li>Pas de CV à fournir pour commencer</li>
+        <li>Vous choisissez comment nous vous recontactons</li>
+        <li>Vos coordonnées ne sont transmises à personne sans votre accord</li>
+      </ul>
+    </div>
+    <div class="register-form">
+      <IndividualForm />
+    </div>
+  </div>
+</section>
+<style>
+  .register { display: grid; gap: 2.5rem; }
+  @media (min-width: 1000px) { .register { grid-template-columns: 0.8fr 1.2fr; gap: 5rem; align-items: start; } .register-intro { position: sticky; top: 7rem; } }
+  .register-promises { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 0.8rem; }
+  .register-promises li { padding-left: 2rem; position: relative; font-weight: 550; }
+  .register-promises li::before { content: '✓'; position: absolute; left: 0; top: -0.05em; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--lime); display: grid; place-items: center; font-size: 0.8rem; font-weight: 800; }
+  .register-form { background: var(--paper); border-radius: var(--radius-lg); padding: clamp(1.25rem, 4vw, 2.75rem); box-shadow: var(--shadow); border: 1px solid var(--line); }
+</style>

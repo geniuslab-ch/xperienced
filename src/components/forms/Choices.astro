@@ -1,0 +1,36 @@
+---
+/** Groupe de cases à cocher ou de boutons radio, dans un fieldset accessible. */
+interface Props {
+  name: string;
+  legend: string;
+  options: Record<string, string>;
+  type?: 'checkbox' | 'radio';
+  required?: boolean;
+  hint?: string;
+  columns?: 1 | 2;
+  checked?: string[];
+  formId: string;
+  msgRequired?: string;
+}
+const { name, legend, options, type = 'checkbox', required = false, hint, columns = 1, checked = [], formId, msgRequired } = Astro.props;
+const id = `${formId}-${name}`;
+---
+<fieldset
+  class="field"
+  data-group={name}
+  data-group-required={type === 'checkbox' && required ? '' : undefined}
+  data-msg-required={msgRequired}
+  aria-describedby={`${hint ? `${id}-hint ` : ''}${id}-error`}
+>
+  <legend>{legend} {required ? <span class="req">(obligatoire)</span> : <span class="opt">(facultatif)</span>}</legend>
+  {hint && <p class="hint" id={`${id}-hint`}>{hint}</p>}
+  <div class:list={['choices', columns === 2 && 'choices--2']}>
+    {Object.entries(options).map(([value, label]) => (
+      <label class="choice">
+        <input type={type} name={name} value={value} checked={checked.includes(value)} required={type === 'radio' && required} data-msg-required={msgRequired || 'Veuillez choisir une option.'} />
+        <span>{label}</span>
+      </label>
+    ))}
+  </div>
+  <p class="error" id={`${id}-error`} data-error-for={name} aria-live="polite"></p>
+</fieldset>

@@ -1,0 +1,19 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import Choices from './Choices.astro';
+import { FACONS_SOUTIEN, SOURCES } from '../../lib/forms';
+
+const id = 'form-soutien';
+---
+<FormShell kind="soutien" id={id}>
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="nom" label="Nom ou organisation" required autocomplete="name" maxlength={100} />
+    <Field formId={id} name="email" type="email" label="E-mail" required autocomplete="email" maxlength={120} />
+  </div>
+  <Choices formId={id} name="facons" legend="Comment aimeriez-vous aider ?" hint="Plusieurs réponses possibles." required options={FACONS_SOUTIEN} />
+  <div class="form-grid form-grid--2">
+    <Field formId={id} name="message" type="textarea" label="Un mot de plus ?" maxlength={1000} rows={3} />
+    <Field formId={id} name="source" type="select" label="Comment avez-vous connu Xperienced ?" options={SOURCES} emptyOption="—" />
+  </div>
+</FormShell>

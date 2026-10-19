@@ -1,0 +1,40 @@
+---
+import { fr } from '../../content/fr';
+import { rich } from '../../lib/rich';
+const t = fr.paths;
+---
+<section id="chemins" class="section" aria-labelledby="paths-title">
+  <div class="wrap">
+    <p class="kicker">{t.kicker}</p>
+    <h2 id="paths-title" class="title" set:html={rich(t.title)} />
+    <ul class="cards">
+      {t.cards.map((c, i) => (
+        <li id={c.id === 'partager' ? 'partager' : undefined} class:list={['card', `card--${i + 1}`, 'reveal']}>
+          <span class="card-num" aria-hidden="true">{c.number}</span>
+          <h3>{c.title}</h3>
+          <p>{c.text}</p>
+          <ul class="card-tags" aria-label="Exemples">{c.tags.map((tag) => <li>{tag}</li>)}</ul>
+          <a href="#inscription" class="btn card-cta" data-track={`chemin-${c.id}`} data-preset={`form-individu:objectifs:${c.objectifs.join(':')}`}>
+            {c.cta} <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .cards { list-style: none; padding: 0; margin: clamp(2.5rem, 5vw, 4rem) 0 0; display: grid; gap: 1.25rem; }
+  @media (min-width: 900px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+  .card { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.5rem, 3vw, 2.25rem); border-radius: var(--radius-lg); position: relative; overflow: hidden; min-height: 26rem; }
+  .card--1 { background: var(--accent); }
+  .card--2 { background: var(--paper); border: 2px solid var(--ink); }
+  .card--3 { background: var(--ink); color: var(--ivory); }
+  .card-num { font-size: 4.5rem; font-weight: 800; letter-spacing: -0.06em; line-height: 0.8; opacity: 0.75; }
+  .card h3 { font-size: var(--step-2); }
+  .card p { line-height: 1.55; }
+  .card-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .card-tags li { font-size: 0.85rem; font-weight: 650; padding: 0.2rem 0.7rem; border: 1.5px solid currentColor; border-radius: 999px; }
+  .card-cta { margin-top: auto; align-self: flex-start; }
+  .card--3 .card-cta { --bg: var(--lime); --fg: var(--ink); }
+  .card--3 :focus-visible { box-shadow: 0 0 0 3px var(--ink), 0 0 0 6px var(--lime); }
+</style>

@@ -1,0 +1,96 @@
+---
+/**
+ * Kit d'affiches imprimables (A4, une affiche par page).
+ * Imprimer depuis le navigateur : Fichier › Imprimer › Format A4, marges « aucune », graphiques d'arrière-plan activés.
+ * Les QR codes pointent vers SITE_URL/q/<code> : définir SITE_URL avant le build.
+ * Affichage uniquement là où une autorisation a été obtenue.
+ */
+import QRCode from 'qrcode';
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import { posters } from '../content/posters';
+import { findCampaign } from '../config/campaigns';
+
+const base = Astro.site!;
+const isLocal = ['localhost', '127.0.0.1'].includes(base.hostname);
+const items = await Promise.all(
+  posters.map(async (p) => {
+    const url = new URL(`/q/${p.code}`, base).toString();
+    const svg = await QRCode.toString(url, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#0f1631ff', light: '#00000000' } });
+    return { ...p, url, svg, campaign: findCampaign(p.code) };
+  }),
+);
+---
+<Base title="Kit d’affiches · Xperienced" description="Affiches imprimables avec QR codes de suivi." noindex>
+  <main id="contenu" class="kit">
+    <header class="kit-intro wrap">
+      <a href="/" class="kit-logo"><Logo /></a>
+      <h1>Kit d’affiches</h1>
+      <p>Chaque affiche possède son propre QR code de suivi : on sait ainsi quelle affiche, et quel lieu, génère des visites et des inscriptions. Pour un nouveau lieu, créez un code dédié dans <code>src/config/campaigns.ts</code>.</p>
+      <p><strong>À n’afficher qu’avec l’autorisation du lieu</strong> (commerces partenaires, cafés, bibliothèques, espaces de coworking, centres communautaires…). Jamais d’affichage sauvage.</p>
+      <p>Impression : Fichier › Imprimer › A4 portrait, marges « aucune », « graphiques d’arrière-plan » activé.</p>
+      {isLocal && <p class="kit-warn" role="alert">Attention : les QR codes pointent vers <code>{base.origin}</code>. Définissez <code>SITE_URL</code> (adresse publique du site) puis relancez le build avant d’imprimer.</p>}
+      <button type="button" class="btn btn--accent" onclick="window.print()">Imprimer les affiches</button>
+    </header>
+
+    {items.map((p) => (
+      <section class:list={['poster', `poster--${p.theme}`]} aria-label={`Affiche : ${p.headline}`}>
+        <p class="poster-meta">Public : {p.audience} · code <strong>{p.code}</strong>{p.campaign && <> · {p.campaign.label}</>}</p>
+        <div class="sheet">
+          <div class="sheet-top">
+            <Logo tone={p.theme === 'ink' ? 'ivory' : p.theme === 'accent' ? 'on-accent' : 'ink'} />
+            {p.fiction && <span class="fiction">Situation fictive</span>}
+          </div>
+          <h2 class:list={['sheet-h', p.stamp && 'sheet-h--stamp']}>
+            {p.stamp ? <><span class="struck">EXPIRÉ&#8239;?</span><br />Selon qui&#8239;?</> : p.headline}
+          </h2>
+          <p class="sheet-sub">{p.sub}</p>
+          <div class="sheet-bottom">
+            <div class="qr" set:html={p.svg} role="img" aria-label={`QR code vers ${p.url}`} />
+            <div>
+              <p class="qr-cta">{p.qr}</p>
+              <p class="qr-url">{p.url.replace(/^https?:\/\//, '')}</p>
+              <p class="qr-line">L’expérience n’a pas de date de péremption.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))}
+  </main>
+</Base>
+<style>
+  .kit { padding-bottom: 4rem; }
+  .kit-intro { padding-block: 2.5rem; display: grid; gap: 1rem; max-width: 52rem; }
+  .kit-intro h1 { font-size: var(--step-4); }
+  .kit-logo { text-decoration: none; }
+  .kit-warn { background: #fff4d6; border: 2px solid #c28a00; padding: 1rem; border-radius: 10px; }
+  .kit-intro .btn { justify-self: start; }
+  .poster { width: min(100% - 2 * var(--gutter), 210mm); margin: 2.5rem auto 0; }
+  .poster-meta { font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 0.6rem; }
+  .sheet { aspect-ratio: 210 / 297; display: flex; flex-direction: column; padding: 9% 9% 8%; box-shadow: var(--shadow); container-type: inline-size; position: relative; overflow: hidden; }
+  .poster--ink .sheet { background: var(--ink); color: var(--ivory); }
+  .poster--accent .sheet { background: var(--accent); color: var(--ink); }
+  .poster--ivory .sheet { background: var(--ivory); color: var(--ink); }
+  .poster--lime .sheet { background: var(--lime); color: var(--ink); }
+  .sheet-top { display: flex; justify-content: space-between; align-items: center; }
+  .sheet-top :global(.logo) { font-size: 4.5cqw; }
+  .fiction { font-size: 2.4cqw; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 2px solid currentColor; padding: 0.5em 0.8em; border-radius: 6px; }
+  .sheet-h { margin-top: auto; font-size: 10.5cqw; line-height: 0.95; letter-spacing: -0.045em; font-weight: 800; }
+  .sheet-h--stamp { font-size: 15cqw; }
+  .struck { text-decoration: line-through; text-decoration-color: var(--accent); text-decoration-thickness: 0.1em; }
+  .sheet-sub { margin-top: 5cqw; font-family: var(--font-serif); font-style: italic; font-size: 5.6cqw; line-height: 1.12; max-width: 90%; }
+  .sheet-bottom { margin-top: auto; padding-top: 6cqw; display: flex; gap: 5cqw; align-items: flex-end; border-top: 3px solid currentColor; }
+  .qr { width: 26cqw; flex: none; background: #fff; padding: 2.2cqw; border-radius: 2cqw; }
+  .qr :global(svg) { width: 100%; height: auto; }
+  .qr-cta { font-size: 4.6cqw; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+  .qr-url { margin-top: 1.5cqw; font-size: 2.6cqw; font-weight: 600; opacity: 0.85; }
+  .qr-line { margin-top: 2.5cqw; font-size: 2.4cqw; opacity: 0.8; }
+  @media print {
+    @page { size: A4 portrait; margin: 0; }
+    body { background: #fff; }
+    .kit-intro, .poster-meta, .skip-link { display: none !important; }
+    .kit { padding: 0; }
+    .poster { width: 210mm; height: 297mm; margin: 0; break-after: page; }
+    .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
