@@ -11,7 +11,7 @@
 - SEO : titre, description, balises de partage (Open Graph), image de partage, plan du site, robots.txt, données structurées FAQ, structure de titres logique.
 - Accessibilité : contrôles automatiques WCAG 2.1 AA réussis, navigation au clavier, lien d’évitement, focus visible, textes ≥ 17 px, animations désactivées si « réduire les animations » est activé.
 - Mobile : vérifié de 320 px à 1440 px, sans défilement horizontal.
-- Tests automatiques (Playwright) et déploiement Render prêt (`render.yaml`).
+- Tests automatiques (Playwright). Déploiement GitHub → Vercel prêt (détection automatique) ; Render possible en alternative (`render.yaml`).
 - Kit de lancement : `docs/KIT-DE-LANCEMENT.md`.
 
 ## ✍️ À compléter avec des informations réelles (dans `src/config/site.ts` et `src/content/fr.ts`)
@@ -20,7 +20,6 @@
 - [ ] Personne responsable de la protection des données.
 - [ ] Région(s) où Xperienced est réellement active (ne pas suggérer une couverture inexistante).
 - [ ] Liens des réseaux sociaux (seuls ceux qui existent).
-- [ ] FAQ « Est-ce que l’inscription est gratuite ? » : confirmer, et préciser si une cotisation est prévue.
 - [ ] Politique de confidentialité : prestataires effectivement utilisés, pays de traitement et garanties, durée de conservation, date de mise à jour. **Faire relire** par une personne compétente (voir `docs/PROTECTION-DES-DONNEES.md`).
 - [ ] Mentions légales : forme juridique, IDE éventuel, hébergeur, responsable du contenu.
 - [ ] Informations de don, uniquement si un compte existe.
@@ -30,11 +29,11 @@ Tant que ces éléments manquent, le site affiche « [À compléter] » et un ba
 
 ## ⚙️ À configurer avant de rendre le site public
 
-- [ ] **Hébergement** : créer le service sur Render à partir de `render.yaml` (voir README).
-- [ ] **`SITE_URL`** : l’adresse publique définitive. Indispensable avant d’imprimer les affiches (les QR codes en dépendent).
+- [ ] **Hébergement** : importer le dépôt dans Vercel (voir README, section 4) et choisir la branche de production.
+- [ ] **Offre Vercel** : l’offre gratuite (Hobby) est réservée à un usage non commercial ; confirmer auprès de Vercel qu’elle convient à l’association, sinon passer à Pro.
+- [ ] **`SITE_URL`** : l’adresse publique définitive (sur Vercel, `https://<projet>.vercel.app` par défaut). À fixer avant d’imprimer les affiches : les QR codes en dépendent, et changer d’adresse ensuite rendrait les affiches imprimées inutilisables.
 - [ ] **Réception des formulaires** : `FORM_WEBHOOK_URL` (+ `FORM_WEBHOOK_SECRET`) et/ou `RESEND_API_KEY` + `NOTIFY_EMAIL_TO`. Puis faire un envoi test de chaque formulaire et vérifier sa réception.
 - [ ] **Mesure d’audience** (facultatif) : `PUBLIC_PLAUSIBLE_DOMAIN` ou `PUBLIC_UMAMI_WEBSITE_ID`, puis redéployer.
-- [ ] **Nom de domaine** (facultatif, ~CHF 15–25/an) : l’ajouter dans Render, puis mettre à jour `SITE_URL`.
-- [ ] Mise en veille de l’offre gratuite Render : le premier chargement après une période d’inactivité peut prendre jusqu’à une minute. Acceptable pour démarrer ; passer à l’offre payante la moins chère si cela gêne (affiches très scannées).
+- [ ] **Nom de domaine** (facultatif, ~CHF 15–25/an) : l’ajouter dans Vercel, puis mettre à jour `SITE_URL` et redéployer. Idéalement **avant** d’imprimer les affiches.
 - [ ] Imprimer les affiches depuis `/affiches` **après** avoir défini `SITE_URL`, et scanner chaque QR code avec un téléphone avant de les distribuer.
 - [ ] Obtenir l’autorisation de chaque lieu d’affichage.

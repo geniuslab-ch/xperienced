@@ -248,7 +248,7 @@ Modèle prêt à copier dans un tableur : `docs/tableau-de-bord.csv`. À remplir
 
 | Indicateur | Où le trouver | Pourquoi c’est important |
 |------------|---------------|--------------------------|
-| **Scans QR par campagne** | Journaux du serveur Render : rechercher `qr_scan` (une ligne par scan, avec le code). Ou la mesure d’audience, filtrée par `utm_campaign`. | Savoir quelles affiches et quels lieux fonctionnent |
+| **Scans QR par campagne** | Onglet `qr_scan` de la feuille Google (une ligne par scan, avec le code), ou la mesure d’audience filtrée par `utm_campaign`. | Savoir quelles affiches et quels lieux fonctionnent |
 | **Visiteurs uniques** | Plausible / Umami (si activé) | Ordre de grandeur de l’audience |
 | **Inscriptions individuelles** | Onglet `individu` de la feuille Google (ou e-mails reçus) | Le cœur de la mission |
 | **Demandes employeurs** | Onglet `opportunite`, type d’organisation « Entreprise » | Le nerf de la guerre : sans opportunités, pas de connexions |

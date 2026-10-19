@@ -24,6 +24,9 @@ export type Submission = {
   meta: Record<string, string>;
 };
 
+/** Scan de QR code transmis au webhook (même forme qu'un formulaire, sans données personnelles). */
+type ScanEvent = Omit<Submission, 'kind'> & { kind: 'qr_scan' };
+
 const env = (k: string) => process.env[k]?.trim() || '';
 
 export function channels() {
@@ -39,7 +42,7 @@ export function isConfigured() {
   return c.webhook || c.email || c.devFile;
 }
 
-async function toWebhook(s: Submission) {
+async function toWebhook(s: Submission | ScanEvent, timeout = 10_000) {
   const res = await fetch(env('FORM_WEBHOOK_URL'), {
     method: 'POST',
     headers: {
@@ -47,7 +50,7 @@ async function toWebhook(s: Submission) {
       ...(env('FORM_WEBHOOK_SECRET') ? { 'x-xperienced-secret': env('FORM_WEBHOOK_SECRET') } : {}),
     },
     body: JSON.stringify({ ...s, secret: env('FORM_WEBHOOK_SECRET') || undefined }),
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(timeout),
     redirect: 'follow',
   });
   if (!res.ok) throw new Error(`webhook ${res.status}`);
@@ -106,4 +109,24 @@ export async function deliver(s: Submission): Promise<number> {
   }
   if (!ok) throw new Error('no channel succeeded');
   return ok;
+}
+
+/**
+ * Enregistre un scan de QR code dans le webhook (onglet « qr_scan » de la feuille Google),
+ * pour garder un historique durable : les journaux gratuits de Vercel ou Render ne sont
+ * conservés que peu de temps. Ne bloque jamais la redirection plus de 1,5 s.
+ */
+export async function recordScan(code: string, campaign: string) {
+  if (!env('FORM_WEBHOOK_URL')) return;
+  try {
+    await toWebhook({
+      id: crypto.randomUUID().slice(0, 8),
+      kind: 'qr_scan',
+      received_at: new Date().toISOString(),
+      data: {},
+      meta: { code, utm_campaign: campaign },
+    }, 1500);
+  } catch {
+    /* un scan non enregistré ne doit jamais empêcher la visite */
+  }
 }

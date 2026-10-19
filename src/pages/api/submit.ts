@@ -18,14 +18,26 @@ function limited(ip: string) {
   return recent.length > MAX;
 }
 
-export const POST: APIRoute = async ({ request, clientAddress, redirect }) => {
+/** Adresse IP du visiteur, via les en-têtes du proxy (Vercel, Render) ou la connexion directe. */
+function ipOf(request: Request, getAddress: () => string) {
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip');
+  if (forwarded) return forwarded;
+  try {
+    return getAddress();
+  } catch {
+    return 'unknown'; // certains hébergeurs n'exposent pas l'adresse
+  }
+}
+
+export const POST: APIRoute = async (context) => {
+  const { request, redirect } = context;
   const wantsJson = (request.headers.get('accept') || '').includes('application/json');
   const reply = (status: number, body: Record<string, unknown>, fallback: string) =>
     wantsJson
       ? new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } })
       : redirect(fallback, 303);
 
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || clientAddress || 'unknown';
+  const ip = ipOf(request, () => context.clientAddress);
   if (limited(ip)) {
     return reply(429, { ok: false, error: 'rate_limited' }, '/merci?etat=limite');
   }

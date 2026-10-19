@@ -9,9 +9,11 @@
  *      - Exécuter en tant que : Moi
  *      - Qui a accès : Tout le monde
  *    Copiez l'URL obtenue (https://script.google.com/macros/s/…/exec).
- * 5. Dans Render, définissez FORM_WEBHOOK_URL = cette URL et FORM_WEBHOOK_SECRET = votre secret.
+ * 5. Dans Vercel (Settings › Environment Variables), définissez FORM_WEBHOOK_URL = cette URL et
+ *    FORM_WEBHOOK_SECRET = votre secret, puis redéployez.
  *
  * Chaque type de formulaire arrive dans son propre onglet (individu, opportunite, soutien, mur),
+ * et chaque scan de QR code dans l'onglet « qr_scan »,
  * avec une colonne « statut » à remplir à la main (nouveau, contacté, mis en relation…) :
  * c'est la base du tableau de bord.
  *

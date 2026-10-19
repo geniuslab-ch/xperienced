@@ -5,7 +5,7 @@
 Site de lancement de Xperienced, initiative associative suisse qui aide les personnes de 50 ans et plus à trouver un emploi, une mission, une activité qui a du sens et du lien social, et qui connecte entreprises, associations et partenaires à leur expérience.
 
 - 🇫🇷 Français (Suisse romande) d’abord, architecture prête pour l’allemand et l’italien.
-- 💸 Conçu pour coûter CHF 0 par mois au démarrage (Render gratuit + outils gratuits).
+- 💸 Conçu pour coûter CHF 0 par mois au démarrage (GitHub + Vercel, outils gratuits).
 - 📣 Pensé pour la guérilla marketing : affiches à QR codes traçables, page de campagne, partage et recommandation, mur de l’expérience.
 
 Documents utiles :
@@ -21,7 +21,7 @@ Documents utiles :
 
 ## 1. Modifier les textes (sans être développeur·se)
 
-Tout se fait directement sur GitHub : ouvrez le fichier, cliquez sur le crayon ✏️, modifiez, puis « Commit changes ». Render remet le site à jour automatiquement en 2–3 minutes.
+Tout se fait directement sur GitHub : ouvrez le fichier, cliquez sur le crayon ✏️, modifiez, puis « Commit changes ». Vercel remet le site à jour automatiquement en 1–2 minutes.
 
 | Je veux changer… | Fichier |
 |------------------|---------|
@@ -46,7 +46,7 @@ Règles simples :
 ## 2. Comment le site est construit
 
 - **[Astro](https://astro.build)** : les pages sont générées à l’avance (rapides, bien référencées).
-- Un **petit serveur Node.js** (adaptateur `@astrojs/node`) ne gère que trois choses : `/api/submit` (formulaires), `/q/<code>` (QR codes) et `/api/health` (état du service).
+- Une **petite partie serveur** (fonction Vercel via `@astrojs/vercel`, ou serveur Node via `@astrojs/node` ailleurs) ne gère que trois choses : `/api/submit` (formulaires), `/q/<code>` (QR codes) et `/api/health` (état du service).
 - Aucune base de données, aucun framework JavaScript côté navigateur : moins de 10 Ko de script.
 - Polices auto-hébergées (pas d’appel à Google Fonts).
 
@@ -91,27 +91,35 @@ npm run images       # régénère public/og.png (site lancé sur le port 4321)
 
 ---
 
-## 4. Mettre en ligne sur Render (gratuit)
+## 4. Mettre en ligne avec GitHub + Vercel (recommandé)
 
-1. Créez un compte sur [render.com](https://render.com) avec votre compte GitHub.
-2. **New › Blueprint**, choisissez le dépôt `xperienced`. Render lit `render.yaml` et prépare le service.
-3. Renseignez les variables demandées (voir tableau ci-dessous). Au minimum : `SITE_URL` et un canal de réception des formulaires.
-4. Cliquez sur **Apply**. Le site est en ligne sur `https://xperienced.onrender.com` (ou un nom proche).
-5. Remplacez `SITE_URL` par l’adresse réelle si elle diffère, puis **Manual Deploy › Deploy latest commit**.
-6. Vérifiez `https://VOTRE-SITE/api/health` : `"webhook": true` ou `"email": true` doit apparaître.
-7. Envoyez un formulaire de test de chaque type et vérifiez que vous le recevez.
+Chaque modification poussée sur GitHub est mise en ligne automatiquement par Vercel.
 
-> `render.yaml` déploie la branche `claude/wizardly-turing-zpjbc9`. Une fois le travail fusionné dans `main`, remplacez la ligne `branch:` par `main`.
+1. Créez un compte sur [vercel.com](https://vercel.com) avec **« Continue with GitHub »**.
+2. **Add New… › Project**, puis **Import** le dépôt `geniuslab-ch/xperienced` (autorisez l’application Vercel sur l’organisation GitHub si on vous le demande).
+3. Vercel reconnaît Astro tout seul : ne changez ni la commande de build ni le dossier de sortie.
+4. Avant de cliquer sur **Deploy**, ouvrez **Environment Variables** et ajoutez au moins un canal de réception des formulaires (voir le tableau ci-dessous). `SITE_URL` est facultatif : sans lui, l’adresse `https://<projet>.vercel.app` est utilisée.
+5. **Deploy**. Le site est en ligne en 1–2 minutes.
+6. Branche : tant que le travail n’est pas fusionné dans `main`, allez dans *Settings › Git › Production Branch* et indiquez `claude/wizardly-turing-zpjbc9` (ou fusionnez d’abord dans `main`). Les autres branches obtiennent automatiquement une adresse de prévisualisation.
+7. Vérifiez `https://VOTRE-SITE/api/health` : `"webhook": true` ou `"email": true` doit apparaître. Envoyez un formulaire de test de chaque type.
 
-**Offre gratuite Render :** le service se met en veille après une période sans visite ; la visite suivante peut prendre jusqu’à une minute. C’est acceptable pour démarrer. Si les affiches génèrent beaucoup de scans, passez à l’offre payante la moins chère.
+**Nom de domaine :** *Settings › Domains* dans Vercel, puis définissez `SITE_URL=https://www.votre-domaine.ch` et redéployez (*Deployments › … › Redeploy*). Les variables `SITE_URL` et `PUBLIC_…` sont lues au moment du build : **redéployez après chaque modification**.
 
-**Nom de domaine :** dans Render, *Settings › Custom Domains*, puis mettez à jour `SITE_URL` et redéployez.
+**Offre gratuite (Hobby) :** Vercel la réserve à un usage personnel et non commercial ; demander des dons n’est pas considéré comme commercial. Le statut d’une association qui met en relation des personnes et des employeurs n’est pas explicitement couvert : en cas de doute, posez la question au support Vercel ou passez à l’offre Pro. Pas de mise en veille : les QR codes répondent immédiatement.
+
+**Région :** `vercel.json` fait tourner les formulaires à Francfort (`fra1`), au plus près de la Suisse.
+
+**Mesure d’audience :** vous pouvez aussi activer *Analytics* dans le tableau de bord Vercel (sans cookie), en plus ou à la place de Plausible/Umami — dans ce cas, mentionnez-le dans la politique de confidentialité.
+
+### Alternative : Render
+
+Le fichier `render.yaml` permet aussi de déployer sur [Render](https://render.com) (*New › Blueprint*, choisir le dépôt, renseigner les variables). L’offre gratuite de Render se met en veille après une période sans visite : la visite suivante peut prendre jusqu’à une minute. Le même code fonctionne sur les deux : l’hébergeur est détecté au moment du build.
 
 ### Variables d’environnement
 
 | Variable | Obligatoire | Rôle |
 |----------|-------------|------|
-| `SITE_URL` | Oui | Adresse publique (SEO, liens de partage, QR codes) |
+| `SITE_URL` | Oui sur Render, facultatif sur Vercel | Adresse publique (SEO, liens de partage, QR codes). Sur Vercel, l’adresse de production du projet est utilisée par défaut |
 | `FORM_WEBHOOK_URL` | Un des deux canaux | Reçoit chaque formulaire en JSON (Google Sheets, Make, n8n, Zapier, CRM…) |
 | `FORM_WEBHOOK_SECRET` | Recommandé avec le webhook | Secret partagé, transmis dans l’en-tête `X-Xperienced-Secret` et dans le champ `secret` |
 | `RESEND_API_KEY` + `NOTIFY_EMAIL_TO` | Un des deux canaux | E-mail à l’équipe pour chaque envoi (Resend, offre gratuite) |
@@ -154,7 +162,10 @@ Pensez à indiquer les outils réellement utilisés dans la politique de confide
 ## 6. QR codes, affiches et mesure
 
 - Chaque affiche pointe vers une adresse courte `https://VOTRE-SITE/q/<code>`, définie dans `src/config/campaigns.ts`.
-- À chaque scan, le serveur écrit une ligne `{"event":"qr_scan","code":"cv",…}` dans les journaux Render (*Logs*, rechercher `qr_scan`), puis redirige vers la bonne page avec les paramètres UTM. Les journaux gratuits ne sont conservés que peu de temps : relevez les chiffres chaque semaine dans le tableau de bord (`docs/tableau-de-bord.csv`).
+- À chaque scan, le serveur redirige vers la bonne page avec les paramètres UTM et :
+  - si un webhook est configuré (Google Sheets), ajoute une ligne dans l’onglet **`qr_scan`** (code, campagne, date) : c’est l’historique durable des scans ;
+  - écrit aussi `{"event":"qr_scan","code":"cv",…}` dans les journaux de l’hébergeur (Vercel : *Logs* ; Render : *Logs*). Ces journaux gratuits ne sont conservés que peu de temps.
+- Relevez les chiffres chaque semaine dans le tableau de bord (`docs/tableau-de-bord.csv`).
 - La campagne d’origine est jointe à chaque formulaire (`meta.utm_campaign`) : on sait quelle affiche a produit quelle inscription.
 - Chaque envoi réussi écrit aussi `{"event":"form_submitted","kind":…,"utm_campaign":…}` dans les journaux, sans donnée personnelle.
 - Si Plausible ou Umami est activé, les événements `CTA` (clic sur un bouton, avec son identifiant), `Formulaire commencé`, `Inscription`, `Erreur formulaire` et `Partage` sont envoyés automatiquement.

@@ -213,7 +213,7 @@ const content = {
       },
       {
         q: 'Est-ce que l’inscription est gratuite ?',
-        a: 'L’inscription via ce formulaire est sans frais. [À compléter par l’association : préciser si une cotisation de membre ou des services payants sont prévus.]',
+        a: 'Oui. Pour les personnes qui cherchent un emploi, une mission ou une activité, Xperienced est gratuit : aucun frais ne vous sera demandé, ni à l’inscription, ni lors d’une mise en relation.',
       },
       {
         q: 'Est-ce que Xperienced garantit un emploi ?',
